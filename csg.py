@@ -22,11 +22,11 @@
 def main():
     print("CSG: Chemical Structure Generator\n")
 
-    chem_struct = input("Enter chemical structure: ")
-    elements = get_elements(chem_struct)
+    chem_form = input("Enter chemical structure: ")
+    elements = get_elements(chem_form)
     print(elements)
 
-def get_elements(chem_struct):
+def get_elements(chem_form):
     """
     get_elements():
         Returns a dictionary of elements, with the corresponding number
@@ -35,6 +35,8 @@ def get_elements(chem_struct):
     Example:
         get_elements("H2O") returns {"H": 2, "O": 1}
     """
+
+    chem_form = chem_form.strip()
 
     # This stores the final elements dictionary.
     element_dict = {}
@@ -50,8 +52,8 @@ def get_elements(chem_struct):
     # This flag is set when a digit is found in the formula.
     found_digit = 0
 
-    for i in range(len(chem_struct)):
-        ch = chem_struct[i]
+    for i in range(len(chem_form)):
+        ch = chem_form[i]
 
         if ch.isupper():
             # If `cur_el` is not empty, it means that
