@@ -52,9 +52,7 @@ def get_elements(chem_form):
     # This flag is set when a digit is found in the formula.
     found_digit = 0
 
-    for i in range(len(chem_form)):
-        ch = chem_form[i]
-
+    for ch in chem_form:
         if ch.isupper():
             # If `cur_el` is not empty, it means that
             # before *this* element, there was another element
