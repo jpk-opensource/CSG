@@ -1,26 +1,32 @@
 CSG execution
 
-idea:	show structures for all the 11th grade shit (AB2L, AB3L, etc..)
-	bond order, bond length, central atom, bond nature, geometry
+1. Idea:
 
-database usage: store the examples of all the 11th grade shit( minimum 2
-	for each type) with info on nature of bond, etc.. it time permits
+	- Show structures for all the 11th grade shit (AB2L, AB3L, etc..)
+	  bond order, bond length, central atom, bond nature, geometry
 
-we need to indicate hybridization details 
- 
+2. Database usage:
+	- Store the examples of all the 11th grade shit( minimum 2
+	  for each type) with info on nature of bond, etc.. if time permits
 
-1.I/O
-	user input the chemical formula 
+	- We need to indicate hybridization details
 
-take inp of only di-element compunds
-we gonna have predefined coordinated for the different types
-take the input compound
-check for invalidity and oxidn state of each ele, and check which type it 
-belongs to.
-if all that goes good:
-	provide all the outputs
+3. I/O
+	- User input the chemical formula
 
-1. validation of input
-2. match it with the coordinate database & deal with mogli
+	- Take input of only di-element compounds
 
-keep checkpoints and keep everyone posted 
+	- We gonna have predefined coordinated for the different types
+
+	- Take the input compound
+
+	- Check for invalidity and oxidn state of each element, and check
+	  which type it belongs to.
+
+	- Provide all the outputs
+
+4. Division of processes:
+	- Validation of input
+	- Match it with the coordinate database & deal with mogli
+
+**Keep checkpoints and keep everyone posted**
