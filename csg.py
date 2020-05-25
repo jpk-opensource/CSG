@@ -19,9 +19,77 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-import mogli
+def main():
+    print("CSG: Chemical Structure Generator\n")
 
-molecules = mogli.read("examples/dna.xyz")
+    chem_form = input("Enter chemical structure: ")
+    elements = get_elements(chem_form)
+    print(elements)
 
-for molecule in molecules:
-    mogli.show(molecule, bonds_param = 1.15)
+def get_elements(chem_form):
+    """
+    get_elements():
+        Returns a dictionary of elements, with the corresponding number
+        of the same element present in the formula.
+
+    Example:
+        get_elements("H2O") returns {"H": 2, "O": 1}
+    """
+
+    chem_form = chem_form.strip()
+
+    # This stores the final elements dictionary.
+    element_dict = {}
+
+    # The `current` element
+    cur_el = ""
+
+    # The string to hold number of atoms of the `current` element.
+    # This value is a string, because we need to be able to concatenate
+    # each digit to the end of this variable.
+    cur_el_num_str = "1"
+
+    # This flag is set when a digit is found in the formula.
+    found_digit = False
+
+    for ch in chem_form:
+        if ch.isupper():
+            # If `cur_el` is not empty, it means that
+            # before *this* element, there was another element
+            # in the formula. If `found_digit` is also not set,
+            # it implies that the previous element did not have
+            # any number to go along with it.
+            if cur_el != "" and not found_digit:
+                element_dict[cur_el] = 1
+
+            cur_el = ch
+
+            # Unset `found_digit` when uppercase letter is found
+            found_digit = False
+
+        elif ch.islower():
+            cur_el += ch
+
+            # Unset `found_digit` when lowercase letter is found
+            found_digit = False
+        
+        elif ch.isdigit():
+            if not found_digit:
+                found_digit = True
+                cur_el_num_str = ch
+                element_dict[cur_el] = int(cur_el_num_str)
+            
+            else:
+                cur_el_num_str += ch
+                element_dict[cur_el] = int(cur_el_num_str)
+
+    # If `found_digit` is False after the loop, it means that there was
+    # no number specified for the last element. For example, this
+    # would be true in the case of H2O
+    if found_digit == False:
+        element_dict[cur_el] = 1
+
+    return element_dict
+
+if __name__ == "__main__":
+    main()
