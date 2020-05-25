@@ -50,7 +50,7 @@ def get_elements(chem_form):
     cur_el_num_str = "1"
 
     # This flag is set when a digit is found in the formula.
-    found_digit = 0
+    found_digit = False
 
     for ch in chem_form:
         if ch.isupper():
@@ -65,17 +65,17 @@ def get_elements(chem_form):
             cur_el = ch
 
             # Unset `found_digit` when uppercase letter is found
-            found_digit = 0
+            found_digit = False
 
         elif ch.islower():
             cur_el += ch
 
             # Unset `found_digit` when lowercase letter is found
-            found_digit = 0
+            found_digit = False
         
         elif ch.isdigit():
-            if found_digit != 1:
-                found_digit = 1
+            if not found_digit:
+                found_digit = True
                 cur_el_num_str = ch
                 element_dict[cur_el] = int(cur_el_num_str)
             
@@ -83,10 +83,10 @@ def get_elements(chem_form):
                 cur_el_num_str += ch
                 element_dict[cur_el] = int(cur_el_num_str)
 
-    # If `found_digit` is 0 after the loop, it means that there was
+    # If `found_digit` is False after the loop, it means that there was
     # no number specified for the last element. For example, this
     # would be true in the case of H2O
-    if found_digit == 0:
+    if found_digit == False:
         element_dict[cur_el] = 1
 
     return element_dict
