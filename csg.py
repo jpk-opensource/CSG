@@ -24,7 +24,7 @@ def main():
 
     chem_form = input("Enter chemical structure: ")
     elements = get_elements(chem_form)
-    print(elements)
+
 
 def get_elements(chem_form):
     """
@@ -90,6 +90,27 @@ def get_elements(chem_form):
         element_dict[cur_el] = 1
 
     return element_dict
+
+oxidn_states = {'H': [-1,1],
+                'He': [0],
+                'Li': [1],
+                'Be': [2],
+                'B': [3],
+                'C': [-4,2,4],
+                'N': [-3,-2,4]
+                'O': [-2,-1/2,-1,1,2],
+                'F': [-1],
+                'Ne': [0],
+                'Na': [1],
+                'Mg': [2],
+                'Al': [3],
+                'Si': [4],
+                'P': [3,5],
+                'S': [4,6],
+                'Cl': [-1] # check this. I doubt other halogens other than F have only one oxidation state
+                'Ar': [0],
+                'K': [1],
+                'Ca': [2] }
 
 if __name__ == "__main__":
     main()
