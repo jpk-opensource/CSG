@@ -19,11 +19,14 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+
 def main():
     print("CSG: Chemical Structure Generator\n")
 
     chem_form = input("Enter chemical structure: ")
-    elements = get_elements(chem_form)
+    element_dict = get_elements(chem_form)
+    valid = validate(element_dict)
+    print(valid)  # this line is not needed but still...just for yall to check when executing
 
 
 def get_elements(chem_form):
@@ -72,13 +75,13 @@ def get_elements(chem_form):
 
             # Unset `found_digit` when lowercase letter is found
             found_digit = False
-        
+
         elif ch.isdigit():
             if not found_digit:
                 found_digit = True
                 cur_el_num_str = ch
                 element_dict[cur_el] = int(cur_el_num_str)
-            
+
             else:
                 cur_el_num_str += ch
                 element_dict[cur_el] = int(cur_el_num_str)
@@ -86,31 +89,88 @@ def get_elements(chem_form):
     # If `found_digit` is False after the loop, it means that there was
     # no number specified for the last element. For example, this
     # would be true in the case of H2O
-    if found_digit == False:
+    if not found_digit:
         element_dict[cur_el] = 1
 
     return element_dict
 
-oxidn_states = {'H': [-1,1],
+
+oxidn_states = {'H': [-1, 1],
                 'He': [0],
                 'Li': [1],
                 'Be': [2],
                 'B': [3],
-                'C': [-4,2,4],
-                'N': [-3,-2,4]
-                'O': [-2,-1/2,-1,1,2],
+                'C': [-4, 2, 4],
+                'N': [-3, -2, 4],  # there are more ig. have to look into this
+                'O': [-2, -1, 1, 2],  # must include -0.5, which causes errors
                 'F': [-1],
                 'Ne': [0],
                 'Na': [1],
                 'Mg': [2],
                 'Al': [3],
                 'Si': [4],
-                'P': [3,5],
-                'S': [4,6],
-                'Cl': [-1] # check this. I doubt other halogens other than F have only one oxidation state
+                'P': [3, 5],
+                'S': [4, 6],
+                'Cl': [-1],  # check this. I doubt other halogens other than F have only one oxidation state
                 'Ar': [0],
                 'K': [1],
-                'Ca': [2] }
+                'Ca': [2],
+                'Xe': [4, 6, 8]}
+
+
+def validate(element_dict):
+    """ checks if
+                    (a) input chemical has only 2 elements
+                    (b) they exist, i.e, the constitute a key in the `oxidn_states` dict (which, btw, still requires
+                    a hell lotta additions)
+                    (c) their net charge is zero (this condition checking is achieved by taking into
+                        account the oxidn states of each element)
+
+    :parameter element_dict is a dictionary (see elements from main)
+    :returns boolean
+    @kannan the exceptions are taken care of by the various oxidation states listed in `oxidn_states` (only
+    for compounds with 2 elements)"""
+
+    first_element_charges, second_element_charges, element_list = list(), list(), list()
+    net_charge_zero = False
+    element_list = list()
+
+    # populating a list of input elements if they exist
+    for ch in element_dict:
+        if ch not in oxidn_states:
+            print("Enter a valid chemical\n")
+            return False
+        else:
+            element_list.append(ch)
+
+    # check for deviation from strictly 2 elements
+    if len(element_list) != 2:
+        print("Only chemical compounds with 2 elements accepted\n")
+        return False
+
+    # creating lists of total charge on individual elements in order to
+    # be able to equate their sum to zero
+    for variable_oxidn_state in oxidn_states[element_list[0]]:
+        first_element_charges.append(element_dict[element_list[0]] * variable_oxidn_state)
+
+    for variable_oxidn_state in oxidn_states[element_list[1]]:
+        second_element_charges.append(element_dict[element_list[1]] * variable_oxidn_state)
+
+    # summation to find the net charge. validity of input auto-falsifies
+    # if it fails to show zero net charge
+    for i in range(len(first_element_charges)):
+        for j in range(len(second_element_charges)):
+            net_charge = first_element_charges[i] + second_element_charges[j]
+            if net_charge == 0:
+                net_charge_zero = True
+                break
+
+    if not net_charge_zero:
+        print("Enter a valid chemical\n")
+        return False
+    else:
+        return True
+
 
 if __name__ == "__main__":
     main()
