@@ -25,8 +25,8 @@ oxidn_states = {'H': [-1, 1],
                 'Be': [2],
                 'B': [3],
                 'C': [-4, 2, 4],
-                'N': [-3, -2, 4],  # there are more ig. have to look into this
-                'O': [-2, -1, 1, 2],  # must include -0.5, which causes errors
+                'N': [-3, -2, 4],  # There are more ig. have to look into this
+                'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
                 'F': [-1],
                 'Ne': [0],
                 'Na': [1],
@@ -35,7 +35,7 @@ oxidn_states = {'H': [-1, 1],
                 'Si': [4],
                 'P': [3, 5],
                 'S': [4, 6],
-                'Cl': [-1],  # check this. I doubt other halogens other than F
+                'Cl': [-1],  # Check this. I doubt other halogens other than F
                              # have only one oxidation state
                 'Ar': [0],
                 'K': [1],
