@@ -127,7 +127,7 @@ def validate(element_dict):
             achieved by taking into account the oxidn states of each
            element)
 
-    :parameter element_dict is a dictionary (see element_dict from main())
+    :parameter element_dict is a dictionary (see elements from main())
     :returns boolean
     @kannan the exceptions are taken care of by the various oxidation states
     listed in `oxidn_states` (only for compounds with 2 elements)
