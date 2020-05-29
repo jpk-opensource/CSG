@@ -27,7 +27,7 @@ oxidn_states = {'H': [-1, 1],
                 'C': [-4, 2, 4],
                 'N': [-3, -2, 4],  # There are more ig. have to look into this
                 'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
-                'F': [-1],
+                'F': [-1, 1],
                 'Ne': [0],
                 'Na': [1],
                 'Mg': [2],
