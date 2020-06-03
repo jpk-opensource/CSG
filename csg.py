@@ -48,8 +48,10 @@ def main():
     chem_form = input("Enter chemical structure: ")
     element_dict = get_elements(chem_form)
     valid = validate(element_dict)
-    print(valid)
 
+    if valid:
+        lp = get_lp(element_dict)
+        print(lp)
 
 def get_elements(chem_form):
     """
@@ -172,6 +174,230 @@ def validate(element_dict):
         return False
     else:
         return True
+
+def get_lp(element_dict):
+
+    # Dividing the compund and getting the elements and getting their subscript values
+    # EX: H2O splits to elm1,2=H,O n atm1,2=2,1
+    
+    elm1, elm2 = element_dict.keys()    
+    atm1, atm2 = element_dict.values()
+                                                                            
+    if atm1 > atm2:
+        c_atom = elm2     # Finding central atom and its subscript value by checking which 
+        c_sub = atm2      # subscript value is greater
+        nc_atom = elm1    # Eg: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be 
+        nc_sub = atm1     #     one with lesser atm value, so we will get c_atom as N.
+
+    elif atm2 > atm1:
+        c_atom = elm1
+        c_sub = atm1
+        nc_atom = elm2
+        nc_sub = atm2
+
+    else:
+        c_atom = 0      # Condition where there is no central atom like NaCl.
+
+    # Creating periodic table with groups 1,2 and group 13-18. Havent included transition elemnts.
+    # Each group will have 3 things, its valency(disragrding the -ve values), total num of electrons
+    # present in each element and the total num of valence es in each group
+    
+    grp1 = {'H': 1,
+            'Li': 3,
+            'Na': 11,
+            'K': 19,
+            'Rb': 37,
+            'Cs': 55,
+            'Fr': 87}
+    grp1_valency = 1      # We have to consider 'H' as seperate while using in hyb as it has one 1 e
+    grp1_total_e = grp1.values()
+    grp1_valnc_e = 1 
+
+    grp2={'Be': 4,
+          'Mg': 12,
+          'Ca': 20,
+          'Sr': 38,
+          'Ba': 56,
+          'Ra': 88}
+    grp2_valency = 2
+    gr2_total_e = grp2.values()
+    grp2_valnc_e = 2
+    
+    grp13 = {'B': 5,
+             'Al': 13,
+             'Ga': 31,
+             'In': 49,
+             'Ti': 81}
+    grp13_valency = 3
+    grp13_total_e = grp13.values()
+    grp13_valnc_e = 3
+
+    grp14 = {'C': 6,
+             'Si': 14,
+             'Ge': 32,
+             'Sn': 50,
+             'Pb': 82}
+    grp14_valency = 4
+    grp14_total_e = grp14.values()
+    grp14_valnc_e = 4
+
+    grp15 = {'N': 7,
+             'P': 15,
+             'As': 33,
+             'Sb': 51,
+             'Bi': 83}
+    grp15_valency = 3
+    grp15_total_e = grp15.values()
+    grp15_valnc_e = 5
+    
+    grp16 = {'O': 8,
+             'S': 16,
+             'Se': 34,
+             'Te': 52,
+             'Po': 84}
+    grp16_valency = 2
+    grp16_total_e = grp16.values()
+    grp16_valnc_e = 6
+
+    grp17 = {'F': 9,
+             'Cl': 17,
+             'Br': 35,
+             'I': 53,
+             'At': 85}
+    grp17_valency = 1
+    grp17_total_e = grp17.values()
+    grp17_valnc_e = 7
+
+    grp18 = {'He': 2,
+             'Ne': 10,
+             'Ar': 18,
+             'Kr': 36,
+             'Xe': 54,
+             'Rn': 86}
+    grp18_valency = 0
+    grp18_total_e = grp18.values()
+
+    if elm1 == "He":  # Since 'He' has one s shell n 2 es it will only get 2 valence e.
+        grp18_valnc_e = 2
+
+    else:
+        grp18_valnc_e = 8
+        
+
+    if c_atom != 0:
+
+        # Calculating the total number of valence electrons in the non central atom.
+        # Since 2 groups will have similar magnitude of valency we can take valency of 1 group itself
+        # Eg: H2O
+        # valency of H atom * subscript value(2)
+        # ie: 1*2=2
+        
+          
+        if nc_atom in grp1 or nc_atom in grp17:   
+            elec1 = grp1_valency * nc_sub          
+
+        elif nc_atom in grp2 or nc_atom in grp16: 
+            elec1 = grp2_valency * nc_sub         
+                                                  
+        elif nc_atom in grp13 or nc_atom in grp15:
+            elec1 = grp3_valency * nc_sub
+
+        elif nc_atm in grp4:
+            elec1 = grp4_valency * nc_sub
+
+        # Calculating the total number of valence electrons in the central atom.
+        # Only for central atoms we need to find lone pair es
+        """
+            Now we find the valence electons of the central atom
+            now to find lone pair es we have to find bone pair es
+            bp= The total number of valence electrons in c_atom - The number atoms
+                which is getting bonded to the _atom
+            now, lp=bp/2
+            EX:H2O
+            bp of O=group16_valnc_e(6) - elec2(2) = 4
+            now lp= bp/2 = 4/2 = 2
+        """
+        if c_atom in grp1:
+            elec2 = grp1_valency * c_sub
+            bp = (grp1_valnc_e) - elec2         
+            lp = bp / 2                         
+                                                   
+        elif c_atom in grp2:                      
+            elec2 = grp2_valency * c_sub          
+            bp = (grp2_valnc_e) - elec2         
+            lp = bp / 2                                                  
+
+        elif c_atom in grp13: 
+            elec2 = grp13_valency * c_sub
+            bp = (grp13_valnc_e) - elec2
+            lp = bp / 2
+
+        elif c_atom in grp14:
+            elec2 = grp14_valency * c_sub
+            bp = (grp14_valnc_e) - elec2
+            lp = bp / 2
+
+        elif c_atom in grp15:
+            elec2 = grp15_valency * c_sub
+            bp = (grp15_valnc_e) - elec2
+            lp = bp / 2
+
+        elif c_atom in grp16:
+            elec2 = grp16_valency * c_sub
+            bp = (grp16_valnc_e) - elec2
+            lp = bp / 2
+
+        elif c_atom in grp17:
+            elec2 = grp17_valency *c_sub
+            bp = (grp17_valnc_e) - elec2
+            lp = bp / 2
+
+        elif c_atom in grp18:
+            elec2 = grp18_valency * c_sub
+            bp = (grp18_valnc_e) - elec2
+            lp = bp / 2
+
+    else:
+        # Condition where there is no central atom so lp would not be there so here we r just
+        # finding the number electrons in each element( doesnt neccesarily needed ) just if
+        # needed in future I created it
+        lp = 0
+        if elm1 in grp1 or elm1 in grp17:
+            elec1 = grp1_valency * atm1
+
+        elif elm1 in grp2 or elm1 in grp16:
+            elec1 = grp2_valency * atm1
+
+        elif elm1 in grp13 or elm1 in grp15:
+            elec1 = grp3_valency * atm1
+
+        elif elm1 in grp4:
+            elec1 = grp4_valency * atm1
+        
+        if elm2 in grp1:
+            elec2 = grp1_valency * atm2
+
+        elif elm2 in grp2:
+            elec2 = grp2_valency * atm2
+
+        elif elm2 in grp13:
+            elec2 = grp13_valency * atm2
+
+        elif elm2 in grp14:
+            elec2 = grp14_valency * atm2
+
+        elif elm2 in grp15:
+            elec2 = grp15_valency * atm2
+
+        elif elm2 in grp16:
+            elec2 = grp16_valency * atm2
+
+        elif elm2 in grp17:
+            elec2 = grp17_valency * atm2
+        elif elm2 in grp18:
+            elec2 = grp18_valency * atm2
+    
+    return lp
 
 if __name__ == "__main__":
     main()
