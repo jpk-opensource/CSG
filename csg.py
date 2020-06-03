@@ -177,16 +177,16 @@ def validate(element_dict):
 
 def get_lp(element_dict):
 
-    #dividing the compund and getting the elements and getting their subscript values
-    'EX: H2O splits to elm1,2=H,O n atm1,2=2,1'
+    # Dividing the compund and getting the elements and getting their subscript values
+    # EX: H2O splits to elm1,2=H,O n atm1,2=2,1
     
     elm1, elm2 = element_dict.keys()    
     atm1, atm2 = element_dict.values()
                                                                             
     if atm1 > atm2:
-        c_atom = elm2     # finding central atom and its subscript value by checking which 
+        c_atom = elm2     # Finding central atom and its subscript value by checking which 
         c_sub = atm2      # subscript value is greater
-        nc_atom = elm1    # ex: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be 
+        nc_atom = elm1    # Eg: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be 
         nc_sub = atm1     #     one with lesser atm value, so we will get c_atom as N.
 
     elif atm2 > atm1:
@@ -196,7 +196,7 @@ def get_lp(element_dict):
         nc_sub = atm2
 
     else:
-        c_atom = 0      # condition where there is no central atom like NaCl.
+        c_atom = 0      # Condition where there is no central atom like NaCl.
 
     # Creating periodic table with groups 1,2 and group 13-18. Havent included transition elemnts.
     # Each group will have 3 things, its valency(disragrding the -ve values), total num of electrons
@@ -209,7 +209,7 @@ def get_lp(element_dict):
             'Rb': 37,
             'Cs': 55,
             'Fr': 87}
-    grp1_valency = 1      # we have to consider 'H' as seperate while using in hyb as it has one 1 e
+    grp1_valency = 1      # We have to consider 'H' as seperate while using in hyb as it has one 1 e
     grp1_total_e = grp1.values()
     grp1_valnc_e = 1 
 
@@ -277,7 +277,7 @@ def get_lp(element_dict):
     grp18_valency = 0
     grp18_total_e = grp18.values()
 
-    if elm1 == "He":  #since He has one s shell n 2 es it will only get 2 valence e.
+    if elm1 == "He":  # Since 'He' has one s shell n 2 es it will only get 2 valence e.
         grp18_valnc_e = 2
 
     else:
@@ -287,10 +287,10 @@ def get_lp(element_dict):
     if c_atom != 0:
 
         # Calculating the total number of valence electrons in the non central atom.
-        " Since 2 groups will have similar magnitude of valency we can take valency of 1 group itself"
-        "EX: H2O"
-        "valency of H atom * subscript value(2)"
-        "ie: 1*2=2"
+        # Since 2 groups will have similar magnitude of valency we can take valency of 1 group itself
+        # Eg: H2O
+        # valency of H atom * subscript value(2)
+        # ie: 1*2=2
         
           
         if nc_atom in grp1 or nc_atom in grp17:   
@@ -316,7 +316,7 @@ def get_lp(element_dict):
             EX:H2O
             bp of O=group16_valnc_e(6) - elec2(2) = 4
             now lp= bp/2 = 4/2 = 2
-            """
+        """
         if c_atom in grp1:
             elec2 = grp1_valency * c_sub
             bp = (grp1_valnc_e) - elec2         
@@ -358,9 +358,9 @@ def get_lp(element_dict):
             lp = bp / 2
 
     else:
-        # condition where there is no central atom so lp would not be there so here we r just
+        # Condition where there is no central atom so lp would not be there so here we r just
         # finding the number electrons in each element( doesnt neccesarily needed ) just if
-        # needed in future i created it
+        # needed in future I created it
         lp = 0
         if elm1 in grp1 or elm1 in grp17:
             elec1 = grp1_valency * atm1
