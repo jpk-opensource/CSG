@@ -51,7 +51,9 @@ def main():
 
     if valid:
         lp = get_lp(element_dict)
-        print(lp)
+        geometry = gdict_to_str(classify_geometry(element_dict, lp))
+        print("Lone pairs: ", lp)
+        print("Geometry: ", geometry)
 
 def get_elements(chem_form):
     """
@@ -398,6 +400,56 @@ def get_lp(element_dict):
             elec2 = grp18_valency * atm2
     
     return lp
+
+def classify_geometry(element_dict, lp):
+    """
+    classify_geometry():
+        Classifies the geometry of a given compound, given
+        `element_dict` (see get_elements()) and number of
+        lone pairs `lp` (see get_lp()).
+
+        This function returns a dictionary.
+
+    Example:
+        classify_geometry({'H': 2, 'O': 1}, 1) returns
+        {'A': 1, 'B': 2, 'L': 1}
+    """
+
+    # This dictionary holds the final classification.
+    geometry = {'A': 1, 'B': 1, 'L': 0}
+
+    for el in element_dict:
+        if element_dict[el] > 1:
+            geometry['B'] = element_dict[el]
+            break;
+
+    geometry['L'] = int(lp)
+    return geometry
+
+def gdict_to_str(geometry_dict):
+    """
+    gdict_to_str():
+        Coverts a geometry dictionary to string.
+
+    Example:
+        gdict_to_str({'A': 1, 'B': 2, 'L': 0}) returns
+        "AB2"
+    """
+
+    # This stores the final geometry string
+    geometry_str = ""
+
+    for el in geometry_dict:
+        # Subscript value
+        sub = geometry_dict[el]
+
+        if sub > 1:
+            geometry_str += el + str(sub)
+
+        elif sub == 1:
+            geometry_str += el
+
+    return geometry_str
 
 if __name__ == "__main__":
     main()
