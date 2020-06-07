@@ -40,7 +40,7 @@ oxidn_states = {'H': [-1, 1],
                 'Ar': [0],
                 'K': [1],
                 'Ca': [2],
-                'Xe': [4, 6, 8]}
+                'Xe': [2, 4, 6, 8]}
 
 def main():
     print("CSG: Chemical Structure Generator\n")
@@ -314,50 +314,40 @@ def get_lp(element_dict):
             now to find lone pair es we have to find bone pair es
             bp= The total number of valence electrons in c_atom - The number atoms
                 which is getting bonded to the _atom
-            now, lp=bp/2
             EX:H2O
-            bp of O=group16_valnc_e(6) - elec2(2) = 4
-            now lp= bp/2 = 4/2 = 2
+            2 H is attached to O so lp= (6e - 2e) / 2 = 2
         """
         if c_atom in grp1:
-            elec2 = grp1_valency * c_sub
-            bp = (grp1_valnc_e) - elec2         
-            lp = bp / 2                         
+            elec2 = grp1_valency * c_sub         
+            lp = (grp1_valnc_e - elec1) / 2       
                                                    
         elif c_atom in grp2:                      
-            elec2 = grp2_valency * c_sub          
-            bp = (grp2_valnc_e) - elec2         
-            lp = bp / 2                                                  
+            elec2 = grp2_valency * c_sub
+            lp = (grp2_valnc_e - elec1) / 2                                                 
 
         elif c_atom in grp13: 
             elec2 = grp13_valency * c_sub
-            bp = (grp13_valnc_e) - elec2
-            lp = bp / 2
+            lp = (grp13_valnc_e - elec1) / 2
 
         elif c_atom in grp14:
             elec2 = grp14_valency * c_sub
-            bp = (grp14_valnc_e) - elec2
-            lp = bp / 2
+            lp = (grp14_valnc_e - elec1) / 2
 
         elif c_atom in grp15:
             elec2 = grp15_valency * c_sub
-            bp = (grp15_valnc_e) - elec2
-            lp = bp / 2
+            lp = (grp15_valnc_e - elec1) / 2
 
         elif c_atom in grp16:
             elec2 = grp16_valency * c_sub
-            bp = (grp16_valnc_e) - elec2
-            lp = bp / 2
+            lp = ( grp16_valnc_e - elec1) / 2
 
         elif c_atom in grp17:
             elec2 = grp17_valency *c_sub
-            bp = (grp17_valnc_e) - elec2
-            lp = bp / 2
+            lp = (grp17_valnc_e - elec1) / 2
 
         elif c_atom in grp18:
             elec2 = grp18_valency * c_sub
-            bp = (grp18_valnc_e) - elec2
-            lp = bp / 2
+            lp = (grp18_valnc_e - elec1) / 2
 
     else:
         # Condition where there is no central atom so lp would not be there so here we r just
