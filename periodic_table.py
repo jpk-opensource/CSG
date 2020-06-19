@@ -55,14 +55,14 @@ class PeriodicTable:
         }
         
     def get_valency(self, element):
-        if element == 'He':
-            return 2
-
         for n_grp in self.groups:
             if element in self.groups[n_grp]:
                 return self.group_valencies[n_grp]
                 
     def get_nvalence_electrons(self, element):
+        if element == 'He':
+            return 2
+
         for n_grp in self.groups:
             if element in self.groups[n_grp]:
                 return self.group_valence_electrons[n_grp]
