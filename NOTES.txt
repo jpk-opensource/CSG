@@ -30,3 +30,33 @@ CSG execution
 	- Match it with the coordinate database & deal with mogli
 
 **Keep checkpoints and keep everyone posted**
+
+
+updates:
+
+were working on hybridization output
+
+1. find out lone pairs
+2. 
+
+
+lone_pairs = find_lone_pair(ele_dict) # will output the no. of lp (int)
+if lone_pair == 1:
+...
+elif
+..
+
+
+
+AB 
+
+AB2 	AB2L	AB2L2
+AB3	AB3L	AB3L2
+AB4	AB4L	AB4L2
+AB5	AB5L
+
+AB6
+
+
+
+
