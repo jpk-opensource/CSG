@@ -18,9 +18,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
 from periodic_table import PeriodicTable
-
 oxidn_states = {'H': [-1, 1],
                 'He': [0],
                 'Li': [1],
@@ -44,6 +42,7 @@ oxidn_states = {'H': [-1, 1],
                 'Ca': [2],
                 'Xe': [2, 4, 6, 8]}
 
+
 def main():
     print("CSG: Chemical Structure Generator\n")
 
@@ -56,6 +55,7 @@ def main():
         geometry = gdict_to_str(classify_geometry(element_dict, lp))
         print("Lone pairs: ", lp)
         print("Geometry: ", geometry)
+
 
 def get_elements(chem_form):
     """
@@ -122,6 +122,7 @@ def get_elements(chem_form):
 
     return element_dict
 
+
 def validate(element_dict):
     """
     Checks if
@@ -139,7 +140,7 @@ def validate(element_dict):
     listed in `oxidn_states` (only for compounds with 2 elements)
     """
 
-    first_element_charges, second_element_charges, element_list = [], [], []
+    first_element_charges, second_element_charges, third_element_charges, element_list = [], [], [], []
     net_charge_zero = False
     element_list = []
 
@@ -152,8 +153,8 @@ def validate(element_dict):
             element_list.append(el)
 
     # Check for deviation from strictly 2 elements
-    if len(element_list) != 2:
-        print("Only chemical compounds with 2 elements accepted\n")
+    if len(element_list) not in [2, 3]:
+        print("Enter a valid chemical\n")
         return False
 
     # Creating lists of total charge on individual elements in order to
@@ -164,14 +165,20 @@ def validate(element_dict):
     for variable_oxidn_state in oxidn_states[element_list[1]]:
         second_element_charges.append(element_dict[element_list[1]] * variable_oxidn_state)
 
+    if len(element_list) == 3:
+        for variable_oxidn_state in oxidn_states[element_list[2]]:
+            third_element_charges.append(element_dict[element_list[2]] * variable_oxidn_state)
+
+
     # Summation to find the net charge. Validity of input auto-falsifies
     # if it fails to show zero net charge.
     for i in range(len(first_element_charges)):
         for j in range(len(second_element_charges)):
-            net_charge = first_element_charges[i] + second_element_charges[j]
-            if net_charge == 0:
-                net_charge_zero = True
-                break
+            for k in range(len(third_element_charges)):
+                net_charge = first_element_charges[i] + second_element_charges[j] + third_element_charges[k]
+                if net_charge == 0:
+                    net_charge_zero = True
+                    break
 
     if not net_charge_zero:
         print("Enter a valid chemical\n")
@@ -179,21 +186,25 @@ def validate(element_dict):
     else:
         return True
 
+
 def get_lp(element_dict):
 
-    # Dividing the compund and getting the elements and getting their subscript values
+    # Dividing the compound and getting the elements and getting their subscript values
     # EX: H2O splits to elm1,2=H,O n atm1,2=2,1
-    
-    elm1, elm2 = element_dict.keys()    
-    atm1, atm2 = element_dict.values()
-    
+    if len(element_dict) == 2:
+        elm1, elm2 = element_dict.keys()
+        atm1, atm2 = element_dict.values()
+    else:
+        elm1, elm2, elm3 = element_dict.keys()
+        atm1, atm2, atm3 = element_dict.values()
+
     # Initialize periodic table
     pt = PeriodicTable()
-                                                                 
+
     if atm1 > atm2:
-        c_atom = elm2     # Finding central atom and its subscript value by checking which 
+        c_atom = elm2     # Finding central atom and its subscript value by checking which
         c_sub = atm2      # subscript value is greater
-        nc_atom = elm1    # Eg: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be 
+        nc_atom = elm1    # Eg: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be
         nc_sub = atm1     #     one with lesser atm value, so we will get c_atom as N.
 
     elif atm2 > atm1:
@@ -204,7 +215,7 @@ def get_lp(element_dict):
 
     else:
         c_atom = 0      # Condition where there is no central atom like NaCl.
-    
+
     if c_atom != 0:
 
         # Calculating the total number of valence electrons in the non central atom.
@@ -219,7 +230,7 @@ def get_lp(element_dict):
         # Only for central atoms we need to find lone pair es
         """
             Now we find the valence electons of the central atom
-            now to find lone pair es we have to find bone pair es
+            now to find lone pairs we have to find lone pair es
             bp= The total number of valence electrons in c_atom - The number atoms
                 which is getting bonded to the _atom
             EX:H2O
@@ -227,9 +238,9 @@ def get_lp(element_dict):
         """
         c_valency = pt.get_valency(c_atom)
         elec2 = c_valency * c_sub
-        
+
         n_valence_electrons = pt.get_nvalence_electrons(c_atom)
-        
+
         lp = (n_valence_electrons - elec1) / 2
 
     else:
@@ -239,11 +250,12 @@ def get_lp(element_dict):
         lp = 0
         elm1_valency = pt.get_valency(elm1)
         elm2_valency = pt.get_valency(elm2)
-        
+
         elec1 = elm1_valency * atm1
         elec2 = elm2_valency * atm2
-    
+
     return lp
+
 
 def classify_geometry(element_dict, lp):
     """
@@ -265,10 +277,11 @@ def classify_geometry(element_dict, lp):
     for el in element_dict:
         if element_dict[el] > 1:
             geometry['B'] = element_dict[el]
-            break;
+            break
 
     geometry['L'] = int(lp)
     return geometry
+
 
 def gdict_to_str(geometry_dict):
     """
@@ -294,6 +307,7 @@ def gdict_to_str(geometry_dict):
             geometry_str += el
 
     return geometry_str
+
 
 if __name__ == "__main__":
     main()
