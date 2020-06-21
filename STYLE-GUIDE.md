@@ -51,6 +51,8 @@ def some_function(param1, param2):
     some_function():
     	Useless function that returns param1 after
     	running a useless loop to make param1 = param2
+    	
+    	NOTE: param1 should be less than param2
     """
     # Loop until equal
     while param1 < param2:
