@@ -18,7 +18,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+
 from periodic_table import PeriodicTable
+
 oxidn_states = {'H': [-1, 1],
                 'He': [0],
                 'Li': [1],
