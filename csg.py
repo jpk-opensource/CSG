@@ -174,11 +174,19 @@ def validate(element_dict):
     # if it fails to show zero net charge.
     for i in range(len(first_element_charges)):
         for j in range(len(second_element_charges)):
-            for k in range(len(third_element_charges)):
-                net_charge = first_element_charges[i] + second_element_charges[j] + third_element_charges[k]
+            if len(element_list) == 3:
+                main()
+                for k in range(len(third_element_charges)):
+                    net_charge = first_element_charges[i] + second_element_charges[j] + third_element_charges[k]
+                    if net_charge == 0:
+                        net_charge_zero = True
+                        break
+            else:
+                net_charge = first_element_charges[i] + second_element_charges[j]
                 if net_charge == 0:
                     net_charge_zero = True
                     break
+
 
     if not net_charge_zero:
         print("Enter a valid chemical\n")
