@@ -36,7 +36,7 @@ oxidn_states = {'H': [-1, 1],
                 'Al': [3],
                 'Si': [4],
                 'P': [3, 5],
-                'S': [4, 6],
+                'S': [-2, 4, 6],
                 'Cl': [-1],  # Check this. I doubt other halogens other than F
                              # have only one oxidation state
                 'Ar': [0],
@@ -54,6 +54,7 @@ def main():
 
     if valid:
         lp = get_lp(element_dict)
+        print(lp)
 
 
 def get_elements(chem_form):
@@ -217,20 +218,37 @@ def get_compound_stats(element_dict):
         central_atom = elements[0]
 
     # List of non central atoms
-    nca_list = []
+    nca_dict = {}
 
     for el in elements:
         if el != central_atom:
-            nca_list.append(el)
+            nca_dict[el] = element_dict[el]
 
-    stats = Stats(central_atom, nca_list)
+    stats = Stats(central_atom, nca_dict)
 
     return stats
 
 def get_lp(element_dict):
+    pt = PeriodicTable()
     stats = get_compound_stats(element_dict)
-    stats.print_stats()
 
+    # Dictionary of non-central atoms
+    nc_atoms = stats.nc_atom_dict
+
+    # 'Lone pairs' is initialized to the number of valence electrons
+    # of the central atom.
+    #
+    # We are utilizing this formula:
+    #       lp = (c_atom valence electrons - number of bond pair e's) / 2
+    lp = stats.c_atom_nval_e
+    bp = 0
+
+    for el in nc_atoms:
+        bp += pt.get_valency(el) * nc_atoms[el]
+
+    lp = (lp - bp) / 2
+
+    return lp
 
 def classify_geometry(element_dict, lp):
     """

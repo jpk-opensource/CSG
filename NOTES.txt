@@ -31,32 +31,11 @@ CSG execution
 
 **Keep checkpoints and keep everyone posted**
 
+=== EXCEPTIONS IN LP ===
 
-updates:
+H2SO4 -> EXPANDED OCTET
+SOCl2 -> EXPANDED OCTET
+INCOMPLETE OCTETS!!! -> ClF5, BrF5, ClF3, BrF3, BrCl3
 
-were working on hybridization output
-
-1. find out lone pairs
-2. 
-
-
-lone_pairs = find_lone_pair(ele_dict) # will output the no. of lp (int)
-if lone_pair == 1:
-...
-elif
-..
-
-
-
-AB 
-
-AB2 	AB2L	AB2L2
-AB3	AB3L	AB3L2
-AB4	AB4L	AB4L2
-AB5	AB5L
-
-AB6
-
-
-
-
+=== ACCEPT THESE TOO ===
+- Validation of molecules containing only 1 element.
