@@ -1,4 +1,4 @@
-# periodic_table.py: The Periodic Table
+# chemistry.py: The Chemistry module for CSG
 
 #
 #   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
@@ -70,16 +70,31 @@ class PeriodicTable:
     def get_group_elements(self, num):
         return list(self.groups[num].keys())
 
+class Stats:
+    def __init__(self, ca, nca_dict):
+        pt = PeriodicTable()
+        self.c_atom = ca
+        self.c_atom_val = pt.get_valency(ca)
+        self.c_atom_nval_e = pt.get_nvalence_electrons(ca)
         
-if __name__ == "__main__":
-    print("TEST PROGRAM")
-    pt = PeriodicTable()
-
-    n = int(input("Enter group number: "))
-    print("Group elements:", pt.get_group_elements(n))
-
-    el = input("Enter element to find valency of: ")
-    print("Valency:", pt.get_valency(el))
+        self.nc_atom_dict = nca_dict
+        self.nc_atom_val_list = []
+        self.nc_atom_nval_e_list = []
+        
+        for el in nca_dict:
+            self.nc_atom_val_list.append(pt.get_valency(el))
+            self.nc_atom_nval_e_list.append(pt.get_nvalence_electrons(el))        
     
-    nve = input("Enter element to find number of valence electrons: ")
-    print("Number of valence electrons:", pt.get_nvalence_electrons(nve))
+    # This exists for debugging purposes
+    def print_stats(self):
+        print("=== CENTRAL ATOM ===")
+        print("\tAtom:\t\t\t\t", self.c_atom)
+        print("\tValency:\t\t\t", self.c_atom_val)
+        print("\tNo. of valence electrons:\t", self.c_atom_nval_e)
+    
+        print()
+        
+        print("=== NON-CENTRAL ATOM(S) ===")
+        print("\tAtom\t\t\t\t", self.nc_atom_dict)
+        print("\tValency:\t\t\t", self.nc_atom_val_list)
+        print("\tNo. of valence electrons:\t", self.nc_atom_nval_e_list)

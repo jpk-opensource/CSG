@@ -19,7 +19,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from periodic_table import PeriodicTable
+from chemistry import PeriodicTable, Stats
 
 oxidn_states = {'H': [-1, 1],
                 'He': [0],
@@ -36,7 +36,7 @@ oxidn_states = {'H': [-1, 1],
                 'Al': [3],
                 'Si': [4],
                 'P': [3, 5],
-                'S': [4, 6],
+                'S': [-2, 4, 6],
                 'Cl': [-1],  # Check this. I doubt other halogens other than F
                              # have only one oxidation state
                 'Ar': [0],
@@ -54,9 +54,7 @@ def main():
 
     if valid:
         lp = get_lp(element_dict)
-        geometry = gdict_to_str(classify_geometry(element_dict, lp))
-        print("Lone pairs: ", lp)
-        print("Geometry: ", geometry)
+        print(lp)
 
 
 def get_elements(chem_form):
@@ -195,75 +193,62 @@ def validate(element_dict):
         return True
 
 
-def get_lp(element_dict):
-
-    # Dividing the compound and getting the elements and getting their subscript values
-    # EX: H2O splits to elm1,2=H,O n atm1,2=2,1
-    if len(element_dict) == 2:
-        elm1, elm2 = element_dict.keys()
-        atm1, atm2 = element_dict.values()
-    else:
-        elm1, elm2, elm3 = element_dict.keys()
-        atm1, atm2, atm3 = element_dict.values()
-
-    # Initialize periodic table
+def get_compound_stats(element_dict):
     pt = PeriodicTable()
+    elements = list(element_dict.keys())
+    subscripts = list(element_dict.values())
 
-    if atm1 > atm2:
-        c_atom = elm2     # Finding central atom and its subscript value by checking which
-        c_sub = atm2      # subscript value is greater
-        nc_atom = elm1    # Eg: NH3  atm1=1 and atm2=3 so as atm2>atm1 central atom would be
-        nc_sub = atm1     #     one with lesser atm value, so we will get c_atom as N.
+    central_atom = ""
 
-    elif atm2 > atm1:
-        c_atom = elm1
-        c_sub = atm1
-        nc_atom = elm2
-        nc_sub = atm2
+    min_sub = min(subscripts)
+    if subscripts.count(min_sub) == 1:
+        central_atom = elements[subscripts.index(min_sub)]
 
-    else:
-        c_atom = 0      # Condition where there is no central atom like NaCl.
+    elif len(elements) == 3:
+        max_valence_electrons = 0
+        for el in elements:
+            nv_e = pt.get_nvalence_electrons(el)
 
-    if c_atom != 0:
+            if element_dict[el] == 1:
+                if nv_e > max_valence_electrons:
+                    max_valence_electrons = nv_e
+                    central_atom = el
 
-        # Calculating the total number of valence electrons in the non central atom.
-        # Since 2 groups will have similar magnitude of valency we can take valency of 1 group itself
-        # Eg: H2O
-        # valency of H atom * subscript value(2)
-        # ie: 1*2=2
-        nc_valency = pt.get_valency(nc_atom)
-        elec1 = nc_valency * nc_sub
+    if central_atom == "":
+        central_atom = elements[0]
 
-        # Calculating the total number of valence electrons in the central atom.
-        # Only for central atoms we need to find lone pair es
-        """
-            Now we find the valence electons of the central atom
-            now to find lone pairs we have to find lone pair es
-            bp= The total number of valence electrons in c_atom - The number atoms
-                which is getting bonded to the _atom
-            EX:H2O
-            2 H is attached to O so lp= (6e - 2e) / 2 = 2
-        """
-        c_valency = pt.get_valency(c_atom)
-        elec2 = c_valency * c_sub
+    # List of non central atoms
+    nca_dict = {}
 
-        n_valence_electrons = pt.get_nvalence_electrons(c_atom)
+    for el in elements:
+        if el != central_atom:
+            nca_dict[el] = element_dict[el]
 
-        lp = (n_valence_electrons - elec1) / 2
+    stats = Stats(central_atom, nca_dict)
 
-    else:
-        # Condition where there is no central atom so lp would not be there so here we r just
-        # finding the number electrons in each element( doesnt neccesarily needed ) just if
-        # needed in future I created it
-        lp = 0
-        elm1_valency = pt.get_valency(elm1)
-        elm2_valency = pt.get_valency(elm2)
+    return stats
 
-        elec1 = elm1_valency * atm1
-        elec2 = elm2_valency * atm2
+def get_lp(element_dict):
+    pt = PeriodicTable()
+    stats = get_compound_stats(element_dict)
+
+    # Dictionary of non-central atoms
+    nc_atoms = stats.nc_atom_dict
+
+    # 'Lone pairs' is initialized to the number of valence electrons
+    # of the central atom.
+    #
+    # We are utilizing this formula:
+    #       lp = (c_atom valence electrons - number of bond pair e's) / 2
+    lp = stats.c_atom_nval_e
+    bp = 0
+
+    for el in nc_atoms:
+        bp += pt.get_valency(el) * nc_atoms[el]
+
+    lp = (lp - bp) / 2
 
     return lp
-
 
 def classify_geometry(element_dict, lp):
     """
