@@ -19,7 +19,7 @@
 #   along with CSG.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-class PeriodicTable:
+class PeriodicTable:-
     def __init__(self):
         self.groups = {
             1:  {'H': 1, 'Li': 3, 'Na': 11, 'K': 19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
@@ -53,6 +53,12 @@ class PeriodicTable:
             17: 7,
             18: 8
         }
+
+    def check(self, element):
+        for i in self.groups:
+            if element in self.groups[i]:
+                return True
+        return False
         
     def get_valency(self, element):
         for n_grp in self.groups:

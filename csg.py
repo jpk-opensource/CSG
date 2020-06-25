@@ -56,7 +56,6 @@ def main():
         lp = get_lp(element_dict)
         print(lp)
 
-
 def get_elements(chem_form):
     """
     get_elements():
@@ -139,14 +138,15 @@ def validate(element_dict):
     @kannan the exceptions are taken care of by the various oxidation states
     listed in `oxidn_states` (only for compounds with 2 elements)
     """
-
+    pt = PeriodicTable()
     first_element_charges, second_element_charges, third_element_charges, element_list = [], [], [], []
     net_charge_zero = False
     element_list = []
 
     # Populating a list of input elements if they exist
+    # Transition metals wont properly be validated cos oxidn states is incomplete
     for el in element_dict:
-        if el not in oxidn_states:
+        if not pt.check(el):
             print("Enter a valid chemical\n")
             return False
         else:
