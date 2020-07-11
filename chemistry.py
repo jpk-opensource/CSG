@@ -19,7 +19,7 @@
 #   along with CSG.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-class PeriodicTable:-
+class PeriodicTable:
     def __init__(self):
         self.groups = {
             1:  {'H': 1, 'Li': 3, 'Na': 11, 'K': 19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
@@ -30,7 +30,7 @@ class PeriodicTable:-
             16: {'O': 8,  'S': 16,  'Se': 34, 'Te': 52, 'Po': 84},
             17: {'F': 9,  'Cl': 17, 'Br': 35, 'I': 53,  'At': 85},
             18: {'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86}
-        }
+        } 
         
         self.group_valencies = {
             1:  1,
@@ -53,13 +53,36 @@ class PeriodicTable:-
             17: 7,
             18: 8
         }
+        
+        self.trans_valency = {
+            'Sc' : [3],
+            'Ti' : [4],
+            'V'  : [5, 4],
+            'Cr' : [2],
+            'Mn' : [2, 4, 7],
+            'Fe' : [2, 3],
+            'Co' : [2, 3],
+            'Ni' : [2],
+            'Cu' : [2, 1],
+            'Zn' : [2],
 
+            'Zr' : [2, 3, 4],
+            'Pd' : [2, 4, 6],
+            'Cd' : [2, 4],
+
+            'Hf' : [4],
+            'W'  : [2, 3, 4, 5, 6],
+            'Pt' : [1, 2, 3, 4, 6],
+            'Au' : [1, 2, 3],
+            'Hg' : [1, 2]
+        }
+        
     def check(self, element):
         for i in self.groups:
             if element in self.groups[i]:
                 return True
         return False
-        
+
     def get_valency(self, element):
         for n_grp in self.groups:
             if element in self.groups[n_grp]:
