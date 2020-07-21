@@ -48,25 +48,34 @@ oxidn_states = {'H': [-1, 1],
 
 
 def main():
-    print("CSG: Chemical Structure Generator")
+    print("CSG: Chemical Structure Generator v0.1")
     print("Type '/help' for help on command usage.\n")
 
     init_csg_db()
+    conn = sqlite3.connect(".db/csg_db.db")
+    cur = conn.cursor()
 
     while True:
         try:
             chem_form = input(">> ")
 
+        # Exit on Ctrl-D
         except EOFError:
             print("Exiting...")
+            conn.close()
             exit()
 
+        # Ignore Ctrl-C
         except KeyboardInterrupt:
             print()
             continue
 
+        cmd_type = "builtin" if chem_form[0] == '/' else "formula"
+        cur.execute("INSERT INTO history VALUES(NULL, ?, ?);", (chem_form, cmd_type))
+        conn.commit()
+
         if chem_form.strip()[0] == '/':
-            run_inbuilt_cmd(chem_form)
+            run_builtin_cmd(chem_form.split())
             continue
 
         element_dict = get_elements(chem_form)
@@ -76,7 +85,14 @@ def main():
             lp = get_lp(element_dict)
             print(f"Lone Pairs: {lp}")
 
+    conn.close()
+
 def init_csg_db():
+    """
+    init_csg_db():
+        Initialize the CSG database, if it does not exist. At the moment,
+        all it does is to create the history table if it doesn't exist.
+    """
     if not path.isdir(".db"):
         print("[!] .db/ does not exist. Creating now...")
         mkdir(".db")
@@ -84,6 +100,7 @@ def init_csg_db():
 
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
+
     try:
         cur.execute("SELECT * FROM history;")
 
@@ -91,7 +108,8 @@ def init_csg_db():
         print("[!] History table does not exist. Creating now...")
         table_str = "history("                                      \
                     "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
-                    "    command VARCHAR(32)"                       \
+                    "    command VARCHAR(32),"                      \
+                    "    type VARCHAR(32)"                          \
                     ");"
 
         cur.execute(f"CREATE TABLE {table_str}")
@@ -99,30 +117,81 @@ def init_csg_db():
 
     conn.close()
 
+def run_builtin_cmd(cmd_argv):
+    """
+    run_builtin_cmd():
+        Pretty self-explanatory. Runs builtin commands, if it is recognized.
+        Builtin commands start with '/'.
+    """
+    args = cmd_argv[1:]
+    if cmd_argv[0] in ("/hist", "/history"):
+        history(args)
 
-def run_inbuilt_cmd(cmd):
-    if cmd in ("/hist", "/history"):
-        history()
+    elif cmd_argv[0] == "/help":
+        csg_help(args)
 
-    elif cmd == "/help":
-        help()
-
-    elif cmd in ("/quit", "/exit"):
+    elif cmd_argv[0] in ("/quit", "/exit"):
         print("Exiting...")
         exit()
 
     else:
-        print(f"Invalid command: '{cmd}'")
+        print(f"Invalid command: '{cmd_argv[0]}'")
         print("Try '/help' for more information.")
 
-def history():
-    print("DATABASE NOT INITIALIZED!")
+def history(args):
+    conn = sqlite3.connect(".db/csg_db.db")
+    cur = conn.cursor()
 
-def help():
-    print("Valid commands:")
-    print("\t/history, /hist   : Print command history")
-    print("\t/quit, /exit      : Exit CSG")
-    print("\t/help             : Print this help message")
+    if len(args) > 0:
+        if args[0] == "clear":
+            cur.execute("DELETE FROM history;")
+            cur.execute("DELETE FROM sqlite_sequence WHERE name='history';")
+            conn.commit()
+
+        else:
+            print(f"Invalid subcommand for '/history': {args[0]}")
+
+    else:
+        cur.execute("SELECT * FROM history")
+
+        print("{:>6}  {:<30}  {:<12}".format("No.", "Command", "Type"))
+        for record in cur.fetchall():
+            aligned = "{:>6}  {:<30}  {:<12}".format(str(record[0]), record[1], record[2])
+            print(aligned)
+
+def csg_help(args):
+    valid_cmds = ["/history", "/hist", "/quit", "/exit", "/help"]
+    if len(args) == 0:
+        print("Valid commands:")
+        print("\t{:<20} : {:<20}".format("/history, /hist", "Print command history"))
+        print("\t{:<20} : {:<20}".format("/exit, /quit", "Exit CSG"))
+        print("\t{:<20} : {:<20}".format("/help", "Display this help message"))
+
+    for arg in args:
+        if arg not in valid_cmds:
+            print(f"Invalid builtin command: '{arg}'")
+            print("Try '/help' for more information")
+            return
+
+        elif arg == "/help":
+            print("Usage: /help [name]\n" +
+                  "       Display command help, or (optionally) show usage info for\n" +
+                  "       a specific builtin command.\n")
+            print("Examples\n" +
+                  "\t/help\n" +
+                  "\t/help /history")
+
+        elif arg in ("/hist", "/history"):
+            print("Usage: /history [clear]\n" +
+                  "       Show command history. If 'clear' is specified, clear history.\n")
+
+            print("Examples\n" +
+                  "\t/history\n" +
+                  "\t/history clear")
+
+        else:
+            print("Usage: /exit\n" +
+                  "       Exit CSG.")
 
 def get_elements(chem_form):
     """
@@ -215,14 +284,14 @@ def validate(element_dict):
     # Transition metals wont properly be validated cos oxidn states is incomplete
     for el in element_dict:
         if not pt.check(el):
-            print("Enter a valid chemical\n")
+            print("Enter a valid chemical")
             return False
         else:
             element_list.append(el)
 
     # Check for deviation from strictly 2 elements
     if len(element_list) not in [2, 3]:
-        print("Enter a valid chemical\n")
+        print("Enter a valid chemical")
         return False
 
     # Creating lists of total charge on individual elements in order to
@@ -255,8 +324,9 @@ def validate(element_dict):
                     break
 
     if not net_charge_zero:
-        print("Enter a valid chemical\n")
+        print("Enter a valid chemical")
         return False
+
     else:
         return True
 
@@ -297,6 +367,10 @@ def get_compound_stats(element_dict):
     return stats
 
 def get_lp(element_dict):
+    """
+    get_lp():
+        Return the number of lone pairs in a given compound.
+    """
     pt = PeriodicTable()
     stats = get_compound_stats(element_dict)
 

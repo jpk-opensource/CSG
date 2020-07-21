@@ -30,8 +30,8 @@ class PeriodicTable:
             16: {'O': 8,  'S': 16,  'Se': 34, 'Te': 52, 'Po': 84},
             17: {'F': 9,  'Cl': 17, 'Br': 35, 'I': 53,  'At': 85},
             18: {'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86}
-        } 
-        
+        }
+
         self.group_valencies = {
             1:  1,
             2:  2,
@@ -42,7 +42,7 @@ class PeriodicTable:
             17: 1,
             18: 0
         }
-        
+
         self.group_valence_electrons = {
             1: 1,
             2: 2,
@@ -53,7 +53,7 @@ class PeriodicTable:
             17: 7,
             18: 8
         }
-        
+
         self.trans_valency = {
             'Sc' : [3],
             'Ti' : [4],
@@ -76,7 +76,7 @@ class PeriodicTable:
             'Au' : [1, 2, 3],
             'Hg' : [1, 2]
         }
-        
+
     def check(self, element):
         for i in self.groups:
             if element in self.groups[i]:
@@ -87,7 +87,7 @@ class PeriodicTable:
         for n_grp in self.groups:
             if element in self.groups[n_grp]:
                 return self.group_valencies[n_grp]
-                
+
     def get_nvalence_electrons(self, element):
         if element == 'He':
             return 2
@@ -95,7 +95,7 @@ class PeriodicTable:
         for n_grp in self.groups:
             if element in self.groups[n_grp]:
                 return self.group_valence_electrons[n_grp]
-    
+
     def get_group_elements(self, num):
         return list(self.groups[num].keys())
 
@@ -105,24 +105,24 @@ class Stats:
         self.c_atom = ca
         self.c_atom_val = pt.get_valency(ca)
         self.c_atom_nval_e = pt.get_nvalence_electrons(ca)
-        
+
         self.nc_atom_dict = nca_dict
         self.nc_atom_val_list = []
         self.nc_atom_nval_e_list = []
-        
+
         for el in nca_dict:
             self.nc_atom_val_list.append(pt.get_valency(el))
-            self.nc_atom_nval_e_list.append(pt.get_nvalence_electrons(el))        
-    
+            self.nc_atom_nval_e_list.append(pt.get_nvalence_electrons(el))
+
     # This exists for debugging purposes
     def print_stats(self):
         print("=== CENTRAL ATOM ===")
         print("\tAtom:\t\t\t\t", self.c_atom)
         print("\tValency:\t\t\t", self.c_atom_val)
         print("\tNo. of valence electrons:\t", self.c_atom_nval_e)
-    
+
         print()
-        
+
         print("=== NON-CENTRAL ATOM(S) ===")
         print("\tAtom\t\t\t\t", self.nc_atom_dict)
         print("\tValency:\t\t\t", self.nc_atom_val_list)
