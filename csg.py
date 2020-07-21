@@ -19,7 +19,9 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from chemistry import PeriodicTable, Stats
+import sqlite3
+from os         import path, mkdir
+from chemistry  import PeriodicTable, Stats
 
 oxidn_states = {'H': [-1, 1],
                 'He': [0],
@@ -46,15 +48,81 @@ oxidn_states = {'H': [-1, 1],
 
 
 def main():
-    print("CSG: Chemical Structure Generator\n")
+    print("CSG: Chemical Structure Generator")
+    print("Type '/help' for help on command usage.\n")
 
-    chem_form = input("Enter chemical structure: ")
-    element_dict = get_elements(chem_form)
-    valid = validate(element_dict)
+    init_csg_db()
 
-    if valid:
-        lp = get_lp(element_dict)
-        print(lp)
+    while True:
+        try:
+            chem_form = input(">> ")
+
+        except EOFError:
+            print("Exiting...")
+            exit()
+
+        except KeyboardInterrupt:
+            print()
+            continue
+
+        if chem_form.strip()[0] == '/':
+            run_inbuilt_cmd(chem_form)
+            continue
+
+        element_dict = get_elements(chem_form)
+        valid = validate(element_dict)
+
+        if valid:
+            lp = get_lp(element_dict)
+            print(f"Lone Pairs: {lp}")
+
+def init_csg_db():
+    if not path.isdir(".db"):
+        print("[!] .db/ does not exist. Creating now...")
+        mkdir(".db")
+        print("[\u2713] Done!")
+
+    conn = sqlite3.connect(".db/csg_db.db")
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM history;")
+
+    except Exception:
+        print("[!] History table does not exist. Creating now...")
+        table_str = "history("                                      \
+                    "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
+                    "    command VARCHAR(32)"                       \
+                    ");"
+
+        cur.execute(f"CREATE TABLE {table_str}")
+        print("[\u2713] Done!")
+
+    conn.close()
+
+
+def run_inbuilt_cmd(cmd):
+    if cmd in ("/hist", "/history"):
+        history()
+
+    elif cmd == "/help":
+        help()
+
+    elif cmd in ("/quit", "/exit"):
+        print("Exiting...")
+        exit()
+
+    else:
+        print(f"Invalid command: '{cmd}'")
+        print("Try '/help' for more information.")
+
+def history():
+    print("DATABASE NOT INITIALIZED!")
+
+def help():
+    print("Valid commands:")
+    print("\t/history, /hist   : Print command history")
+    print("\t/quit, /exit      : Exit CSG")
+    print("\t/help             : Print this help message")
 
 def get_elements(chem_form):
     """
