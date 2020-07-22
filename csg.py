@@ -46,6 +46,7 @@ oxidn_states = {'H': [-1, 1],
                 'Ca': [2],
                 'Xe': [2, 4, 6, 8]}
 
+tick = '\u2713'
 
 def main():
     print("CSG: Chemical Structure Generator v0.1")
@@ -68,6 +69,9 @@ def main():
         # Ignore Ctrl-C
         except KeyboardInterrupt:
             print()
+            continue
+
+        if chem_form == '':
             continue
 
         cmd_type = "builtin" if chem_form[0] == '/' else "formula"
@@ -96,7 +100,7 @@ def init_csg_db():
     if not path.isdir(".db"):
         print("[!] .db/ does not exist. Creating now...")
         mkdir(".db")
-        print("[\u2713] Done!")
+        print(f"[{tick}] Done!")
 
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
@@ -113,7 +117,7 @@ def init_csg_db():
                     ");"
 
         cur.execute(f"CREATE TABLE {table_str}")
-        print("[\u2713] Done!")
+        print(f"[{tick}] Done!")
 
     conn.close()
 
@@ -144,9 +148,11 @@ def history(args):
 
     if len(args) > 0:
         if args[0] == "clear":
+            print("[-] Clearing history...")
             cur.execute("DELETE FROM history;")
             cur.execute("DELETE FROM sqlite_sequence WHERE name='history';")
             conn.commit()
+            print (f"[{tick}] Done!")
 
         else:
             print(f"Invalid subcommand for '/history': {args[0]}")
