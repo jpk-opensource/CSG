@@ -114,9 +114,9 @@ def init_csg_db():
                     "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
                     "    command VARCHAR(32),"                      \
                     "    type VARCHAR(32)"                          \
-                    ");"
+                    ")"
 
-        cur.execute(f"CREATE TABLE {table_str}")
+        cur.execute(f"CREATE TABLE {table_str};")
         print(f"[{tick}] Done!")
 
     conn.close()
@@ -158,7 +158,7 @@ def history(args):
             print(f"Invalid subcommand for '/history': {args[0]}")
 
     else:
-        cur.execute("SELECT * FROM history")
+        cur.execute("SELECT * FROM history;")
 
         print("{:>6}  {:<30}  {:<12}".format("No.", "Command", "Type"))
         for record in cur.fetchall():
