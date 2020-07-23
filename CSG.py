@@ -20,9 +20,10 @@
 #
 
 from sys import argv
-from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout,
-                             QVBoxLayout, QDialog, QDialogButtonBox,
-                             QPushButton, QLabel, QLineEdit)
+from PyQt5.QtWidgets import (QApplication, QDesktopWidget,
+                             QWidget, QGridLayout, QVBoxLayout, 
+                             QPushButton, QLabel, QMessageBox,
+                             QLineEdit)
 
 from csg_core import *
 
@@ -34,6 +35,8 @@ class Home(QWidget):
 
     def init_UI(self):
         self.setWindowTitle("CSG: Chemical Structure Generator")
+        self.resize(250, 150)
+        self.center()
         self.grid = QGridLayout()
 
         self.grid.addWidget(QLabel("Chemical Formula:"), 0, 0)
@@ -41,6 +44,9 @@ class Home(QWidget):
         self.grid.addWidget(self.formula_field, 0, 1, 1, 3)
 
         self.go_btn = QPushButton("Go!")
+        self.go_btn.setDisabled(True)
+
+        self.formula_field.textChanged.connect(self.enable_disable_btn)
         self.grid.addWidget(self.go_btn, 1, 1, 1, 2)
 
         self.go_btn.clicked.connect(self.on_go_btn_click)
@@ -48,23 +54,29 @@ class Home(QWidget):
         self.grid.setSpacing(10)
         self.setLayout(self.grid)
 
-    def on_go_btn_click(self):
+    def center(self):
+        rectangle = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+        rectangle.moveCenter(center_point)
+
+        self.move(rectangle.topLeft())
+
+    def enable_disable_btn(self):
+        if len(self.formula_field.text()) > 0:
+            self.go_btn.setDisabled(False)
+
+        else:
+            self.go_btn.setDisabled(True)
+
+    def on_go_btn_click(self): 
         element_dict = get_elements(self.formula_field.text())
         valid = validate(element_dict)
 
         if not valid:
-            invalid_dlg = QDialog(self)
-            invalid_dlg.setWindowTitle("Invalid Compound")
-
-            dlg_btns = QDialogButtonBox.Ok
-            dlg_btn_box = QDialogButtonBox(dlg_btns)
-            dlg_btn_box.accepted.connect(invalid_dlg.accept)
-
-            dlg_layout = QVBoxLayout()
-            dlg_layout.addWidget(dlg_btn_box)
-
-            invalid_dlg.setLayout(dlg_layout)
-            invalid_dlg.exec_()
+            QMessageBox.warning(self, "Invalid Compound",
+                                    "Enter a valid compound.",
+                                    QMessageBox.Ok, QMessageBox.Ok)
+            
 
 if __name__ == "__main__":
     app = QApplication(argv)
