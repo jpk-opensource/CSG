@@ -146,27 +146,44 @@ def history(args):
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
 
+    hist_query = "SELECT * FROM history"
+    show_hist = True
+
     if len(args) > 0:
         if args[0] == "clear":
+            show_hist = False
             print("[-] Clearing history...")
             cur.execute("DELETE FROM history;")
             cur.execute("DELETE FROM sqlite_sequence WHERE name='history';")
             conn.commit()
             print (f"[{tick}] Done!")
 
+        elif args[0] == "select":
+            if len(args) != 2:
+                print("Please specify a command type to select.")
+                return
+
+            elif args[1] not in ("formula", "builtin"):
+                print(f"Invalid command type: '{args[1]}'")
+                return
+
+            else:
+                hist_query += f" WHERE type='{args[1]}';"
+
         else:
             print(f"Invalid subcommand for '/history': {args[0]}")
 
-    else:
-        cur.execute("SELECT * FROM history;")
+    if show_hist:
+        cur.execute(hist_query)
 
         print("{:>6}  {:<30}  {:<12}".format("No.", "Command", "Type"))
         for record in cur.fetchall():
             aligned = "{:>6}  {:<30}  {:<12}".format(str(record[0]), record[1], record[2])
             print(aligned)
 
+    conn.close()
+
 def csg_help(args):
-    valid_cmds = ["/history", "/hist", "/quit", "/exit", "/help"]
     if len(args) == 0:
         print("Valid commands:")
         print("\t{:<20} : {:<20}".format("/history, /hist", "Print command history"))
@@ -174,30 +191,36 @@ def csg_help(args):
         print("\t{:<20} : {:<20}".format("/help", "Display this help message"))
 
     for arg in args:
-        if arg not in valid_cmds:
-            print(f"Invalid builtin command: '{arg}'")
-            print("Try '/help' for more information")
-            return
-
-        elif arg == "/help":
+        if arg == "/help":
             print("Usage: /help [name]\n" +
                   "       Display command help, or (optionally) show usage info for\n" +
                   "       a specific builtin command.\n")
+
             print("Examples\n" +
                   "\t/help\n" +
                   "\t/help /history")
 
         elif arg in ("/hist", "/history"):
-            print("Usage: /history [clear]\n" +
-                  "       Show command history. If 'clear' is specified, clear history.\n")
+            print("Usage: /history [subcommand]\n" +
+                  "       Show command history. If 'sub-command' is specified, execute it.\n")
+
+            print("Subcommands:\n" +
+                  "       clear                 : Clear history\n" +
+                  "       select [command type] : Display history of specified command type only\n")
 
             print("Examples\n" +
                   "\t/history\n" +
-                  "\t/history clear")
+                  "\t/history clear\n"+
+                  "\t/history select builtin")
 
-        else:
+        elif arg in ("/exit", "/quit"):
             print("Usage: /exit\n" +
                   "       Exit CSG.")
+
+        else:
+            print(f"Invalid builtin command: '{arg}'")
+            print("Try '/help' for more information")
+            return
 
 def get_elements(chem_form):
     """
