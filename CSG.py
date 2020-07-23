@@ -44,6 +44,10 @@ class Home(QWidget):
         self.grid.addWidget(self.formula_field, 0, 1, 1, 3)
 
         self.go_btn = QPushButton("Go!")
+        self.go_btn.setStyleSheet(":enabled {" +
+                                        "color: white;" +
+                                        "background-color: green;" +
+                                  "}")
         self.go_btn.setDisabled(True)
 
         self.formula_field.textChanged.connect(self.enable_disable_btn)
