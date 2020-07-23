@@ -1,7 +1,5 @@
-#!/usr/bin/python3
+# csg_core.py: Core CSG functions
 
-#
-#   CSG: Chemical Structure Generator
 #
 #   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
 #
