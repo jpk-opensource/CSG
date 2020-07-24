@@ -39,8 +39,12 @@ DARK_STYLESHEET = """
         color: white;
     }
 
-    QMenuBar {
-        background-color: rgb(0, 0, 0);
+    QMenu::item {
+        background-color: rgb(100, 100, 100);
+    }
+
+    QMenu::item:selected {
+        background-color: rgb(0, 132, 255);
     }
 """
 
@@ -73,6 +77,14 @@ class Home(QWidget):
         self.main_layout = QGridLayout()
         self.form_layout = QFormLayout()
 
+        self.menubar = QMenuBar()
+        self.fmenu_actions = self.menubar.addMenu("File")
+        self.actions = ["Open", "Save"]
+        for action in self.actions:
+            self.fmenu_actions.addAction(action)
+
+        self.emenu_actions = self.menubar.addMenu("Edit")
+        self.emenu_actions.addAction("Preferences")
 
         self.recents_label = QLabel("Recents:")
         self.csg_label = QLabel("<b>CSG</b>")
@@ -81,7 +93,17 @@ class Home(QWidget):
 
         self.chem_form_label = QLabel("Chemical Formula:")
         self.formula_field = QLineEdit()
+        self.formula_field.textChanged.connect(self.formula_field_text_changed)
+
         self.go_btn = QPushButton("Go!")
+        self.go_btn.setStyleSheet("""
+            :enabled {
+                background-color: rgb(0, 173, 0);
+            } :disabled {
+                background-color: rgb(173, 0, 0);
+            }""")
+        self.go_btn.clicked.connect(self.go_btn_clicked)
+        self.go_btn.setDisabled(True)
 
         self.recents_list = QListWidget()
 
@@ -105,8 +127,30 @@ class Home(QWidget):
 
         self.main_layout.addLayout(self.form_layout, 1, 1)
 
+        self.layout.addWidget(self.menubar)
         self.layout.addLayout(self.main_layout)
         self.setLayout(self.layout)
+
+    def formula_field_text_changed(self):
+        is_valid = validate(get_elements(self.formula_field.text()))
+        if is_valid:
+            self.formula_field.setStyleSheet("border: 1px solid green;")
+            self.go_btn.setEnabled(True)
+
+        else:
+            self.formula_field.setStyleSheet("border: 1px solid red;")
+            self.go_btn.setDisabled(True)
+
+    def go_btn_clicked(self):
+        is_valid = validate(get_elements(self.formula_field.text()))
+        if is_valid:
+            msg = QMessageBox.information(self, "Valid", "Nice!",
+                                          QMessageBox.Ok)
+
+        else:
+            msg = QMessageBox.warning(self, "Invalid compound",
+                                      "Enter a valid compound.",
+                                      QMessageBox.Ok)
 
 if __name__ == "__main__":
     if "--cli" in argv:
