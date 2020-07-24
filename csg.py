@@ -77,20 +77,13 @@ class Home(QWidget):
         self.main_layout = QGridLayout()
         self.form_layout = QFormLayout()
 
-        self.menubar = QMenuBar()
-        self.fmenu_actions = self.menubar.addMenu("File")
-        self.actions = ["Open", "Save"]
-        for action in self.actions:
-            self.fmenu_actions.addAction(action)
-
-        self.emenu_actions = self.menubar.addMenu("Edit")
-        self.emenu_actions.addAction("Preferences")
-
+        # Headings for the recents list and the program
         self.recents_label = QLabel("Recents:")
         self.csg_label = QLabel("<b>CSG</b>")
         self.csg_label.setFont(QFont("Arial", 25))
         self.csg_label.setAlignment(Qt.AlignCenter)
 
+        # The main CSG form
         self.chem_form_label = QLabel("Chemical Formula:")
         self.formula_field = QLineEdit()
         self.formula_field.textChanged.connect(self.formula_field_text_changed)
@@ -127,7 +120,6 @@ class Home(QWidget):
 
         self.main_layout.addLayout(self.form_layout, 1, 1)
 
-        self.layout.addWidget(self.menubar)
         self.layout.addLayout(self.main_layout)
         self.setLayout(self.layout)
 
@@ -151,6 +143,59 @@ class Home(QWidget):
             msg = QMessageBox.warning(self, "Invalid compound",
                                       "Enter a valid compound.",
                                       QMessageBox.Ok)
+
+class PreferencesPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+        layout = QGridLayout()
+        layout.addWidget(QLabel("Preferences"))
+
+        self.setLayout(layout)
+        self.show()
+
+class StackHolder(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet(DARK_STYLESHEET)
+
+        layout = QVBoxLayout()
+        self.stackw = QStackedWidget()
+        self.stackw.addWidget(Home())
+        self.stackw.addWidget(PreferencesPage())
+
+        # Populate the menubar
+        menubar = QMenuBar()
+        fmenu_actions = menubar.addMenu("File")
+        actions = ["Open", "Save"]
+        for action in actions:
+            fmenu_actions.addAction(action)
+
+        emenu_actions = menubar.addMenu("Edit")
+        pref_action = emenu_actions.addAction("Preferences")
+        pref_action.triggered.connect(self.set_preferences)
+
+        self.back_btn = QPushButton("< Back")
+        self.back_btn.clicked.connect(self.go_back)
+        self.back_btn.hide()
+
+        layout.addWidget(menubar)
+        layout.addWidget(self.back_btn)
+        layout.addWidget(self.back_btn)
+        layout.addWidget(self.stackw)
+        self.setLayout(layout)
+
+        self.show()
+
+    def set_preferences(self):
+        self.back_btn.show()
+        i = self.stackw.currentIndex()
+        if i == 0:
+            self.stackw.setCurrentIndex(1)
+
+    def go_back(self):
+        self.stackw.setCurrentIndex(0)
+        self.back_btn.hide()
 
 if __name__ == "__main__":
     if "--cli" in argv:
@@ -176,7 +221,7 @@ if __name__ == "__main__":
         cur.execute("INSERT INTO user_preferences VALUES('dark');")
         print(f"[{tick}] Done!")
 
-    w = Home()
+    w = StackHolder()
 
     conn.close()        
     w.show()
