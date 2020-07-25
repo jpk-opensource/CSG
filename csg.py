@@ -28,46 +28,8 @@ from csg_core import *
 
 DEFAULT_TITLE = "CSG: Chemical Structure Generator"
 
-DARK_STYLESHEET = """
-    QWidget {
-        background-color: rgb(23, 23, 23);
-        color: white;
-    }
-
-    QLineEdit, QListWidget {
-        background-color: rgb(30, 30, 30);
-        color: white;
-    }
-
-    QMenu::item {
-        background-color: rgb(100, 100, 100);
-    }
-
-    QMenu::item:selected {
-        background-color: rgb(0, 132, 255);
-    }
-"""
-
-LIGHT_STYLESHEET = """
-    QWidget {
-        background-color: rgb(233, 233, 233);
-        color: black;
-    }
-
-    QLineEdit, QListWidget {
-        background-color: rgb(230, 230, 230);
-        color: black;
-    }
-
-    QMenu::item {
-        background-color: rgb(250, 250, 250);
-    }
-
-    QMenu::item:selected {
-        background-color: rgb(0, 132, 255);
-    }
-"""
-
+DARK_STYLESHEET = ""
+LIGHT_STYLESHEET = ""
 STYLESHEET = ""
 
 class Home(QWidget):
@@ -257,6 +219,12 @@ if __name__ == "__main__":
     if "--cli" in argv:
         main()
         exit()
+
+    with open("styles/light_theme.css") as light_theme:
+        LIGHT_STYLESHEET = light_theme.read()
+
+    with open("styles/dark_theme.css") as dark_theme:
+        DARK_STYLESHEET = dark_theme.read()
 
     conn = sqlite3.connect(".db/csg_db.db")
     cur  = conn.cursor()
