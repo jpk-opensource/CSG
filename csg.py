@@ -50,13 +50,21 @@ DARK_STYLESHEET = """
 
 LIGHT_STYLESHEET = """
     QWidget {
-        background-color: rgb(230, 230, 230);
+        background-color: rgb(233, 233, 233);
         color: black;
     }
 
     QLineEdit, QListWidget {
-        background-color: rgb(255, 255, 255);
+        background-color: rgb(230, 230, 230);
         color: black;
+    }
+
+    QMenu::item {
+        background-color: rgb(250, 250, 250);
+    }
+
+    QMenu::item:selected {
+        background-color: rgb(0, 132, 255);
     }
 """
 
@@ -70,8 +78,6 @@ class Home(QWidget):
         self.show()
 
     def init_UI(self):
-        self.setWindowTitle(DEFAULT_TITLE)
-        self.setStyleSheet(DARK_STYLESHEET)
 
         self.layout = QVBoxLayout()
         self.main_layout = QGridLayout()
@@ -145,24 +151,69 @@ class Home(QWidget):
                                       QMessageBox.Ok)
 
 class PreferencesPage(QWidget):
-    def __init__(self):
+    def __init__(self, stackh, stackw):
         super().__init__()
-        
-        layout = QGridLayout()
-        layout.addWidget(QLabel("Preferences"))
+        layout = QVBoxLayout()
+        self.stackh = stackh
+        self.stackw = stackw
+
+        theme_label = QLabel("Theme")
+
+        self.dark_radio_btn = QRadioButton("Dark theme")
+        self.dark_radio_btn.clicked.connect(self.change_to_dark_theme)
+
+        self.light_radio_btn = QRadioButton("Light Theme")
+        self.light_radio_btn.clicked.connect(self.change_to_light_theme)
+
+        if STYLESHEET == DARK_STYLESHEET:
+            self.dark_radio_btn.setChecked(True)
+
+        else:   
+            self.light_radio_btn.setChecked(True)
+
+        layout.addWidget(theme_label)
+        layout.addWidget(self.dark_radio_btn)
+        layout.addWidget(self.light_radio_btn)
+        layout.addStretch()
 
         self.setLayout(layout)
         self.show()
 
+    def change_to_dark_theme(self):
+        global STYLESHEET
+        global DARK_STYLESHEET
+        conn = sqlite3.connect(".db/csg_db.db")
+        cur = conn.cursor()
+        cur.execute("UPDATE user_preferences SET theme='dark';")
+        conn.commit()
+        conn.close()
+
+        STYLESHEET = DARK_STYLESHEET
+        self.stackh.setStyleSheet(STYLESHEET)
+
+    def change_to_light_theme(self):
+        global STYLESHEET
+        global LIGHT_STYLESHEET
+        conn = sqlite3.connect(".db/csg_db.db")
+        cur = conn.cursor()
+        cur.execute("UPDATE user_preferences SET theme='light';")
+        conn.commit()
+        conn.close()
+
+        STYLESHEET = LIGHT_STYLESHEET
+        self.stackh.setStyleSheet(STYLESHEET)
+
 class StackHolder(QWidget):
     def __init__(self):
         super().__init__()
-        self.setStyleSheet(DARK_STYLESHEET)
+        self.setWindowTitle(DEFAULT_TITLE)
+        self.setStyleSheet(STYLESHEET)
 
         layout = QVBoxLayout()
+        back_btn_layout = QHBoxLayout()
         self.stackw = QStackedWidget()
         self.stackw.addWidget(Home())
-        self.stackw.addWidget(PreferencesPage())
+        self.stackw.addWidget(PreferencesPage(self, self.stackw))
 
         # Populate the menubar
         menubar = QMenuBar()
@@ -180,8 +231,11 @@ class StackHolder(QWidget):
         self.back_btn.hide()
 
         layout.addWidget(menubar)
-        layout.addWidget(self.back_btn)
-        layout.addWidget(self.back_btn)
+
+        back_btn_layout.addWidget(self.back_btn)
+        back_btn_layout.addStretch(1)
+
+        layout.addLayout(back_btn_layout)
         layout.addWidget(self.stackw)
         self.setLayout(layout)
 
@@ -189,12 +243,14 @@ class StackHolder(QWidget):
 
     def set_preferences(self):
         self.back_btn.show()
+        self.setWindowTitle("CSG: Preferences")
         i = self.stackw.currentIndex()
         if i == 0:
             self.stackw.setCurrentIndex(1)
 
     def go_back(self):
         self.stackw.setCurrentIndex(0)
+        self.setWindowTitle(DEFAULT_TITLE)
         self.back_btn.hide()
 
 if __name__ == "__main__":
@@ -219,7 +275,16 @@ if __name__ == "__main__":
         """
         cur.execute(f"CREATE TABLE {user_preferences_table};")
         cur.execute("INSERT INTO user_preferences VALUES('dark');")
+        conn.commit()
         print(f"[{tick}] Done!")
+
+    cur.execute("SELECT theme FROM user_preferences;")
+    theme_result = cur.fetchall()
+    if theme_result[0][0] == "dark":
+        STYLESHEET = DARK_STYLESHEET
+
+    else:
+        STYLESHEET = LIGHT_STYLESHEET
 
     w = StackHolder()
 
