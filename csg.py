@@ -95,10 +95,12 @@ class Home(QWidget):
         is_valid = validate(get_elements(self.formula_field.text()))
         if is_valid:
             self.formula_field.setStyleSheet("border: 1px solid green;")
+            self.go_btn.setText("Go!")
             self.go_btn.setEnabled(True)
 
         else:
             self.formula_field.setStyleSheet("border: 1px solid red;")
+            self.go_btn.setText("Invalid!")
             self.go_btn.setDisabled(True)
 
     def go_btn_clicked(self):
@@ -106,11 +108,6 @@ class Home(QWidget):
         if is_valid:
             msg = QMessageBox.information(self, "Valid", "Nice!",
                                           QMessageBox.Ok)
-
-        else:
-            msg = QMessageBox.warning(self, "Invalid compound",
-                                      "Enter a valid compound.",
-                                      QMessageBox.Ok)
 
 class PreferencesPage(QWidget):
     def __init__(self, stackh, stackw):
