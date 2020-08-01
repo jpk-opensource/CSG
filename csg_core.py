@@ -21,28 +21,30 @@ import sqlite3
 from os         import path, mkdir
 from chemistry  import PeriodicTable, Stats
 
-oxidn_states = {'H': [-1, 1],
-                'He': [0],
-                'Li': [1],
-                'Be': [2],
-                'B': [3],
-                'C': [-4, 2, 4],
-                'N': [-3, -2, 4],  # There are more ig. have to look into this
-                'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
-                'F': [-1, 1],
-                'Ne': [0],
-                'Na': [1],
-                'Mg': [2],
-                'Al': [3],
-                'Si': [4],
-                'P': [3, 5],
-                'S': [-2, 4, 6],
-                'Cl': [-1],  # Check this. I doubt other halogens other than F
-                             # have only one oxidation state
-                'Ar': [0],
-                'K': [1],
-                'Ca': [2],
-                'Xe': [2, 4, 6, 8]}
+oxidn_states = {
+    'H': [-1, 1],
+    'He': [0],
+    'Li': [1],
+    'Be': [2],
+    'B': [3],
+    'C': [-4, 2, 4],
+    'N': [-3, -2, 4],  # There are more ig. have to look into this
+    'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
+    'F': [-1, 1],
+    'Ne': [0],
+    'Na': [1],
+    'Mg': [2],
+    'Al': [3],
+    'Si': [4],
+    'P': [3, 5],
+    'S': [-2, 4, 6],
+    'Cl': [-1],  # Check this. I doubt other halogens other than F
+                 # have only one oxidation state
+    'Ar': [0],
+    'K': [1],
+    'Ca': [2],
+    'Xe': [2, 4, 6, 8]
+}
 
 tick = '\u2713'
 

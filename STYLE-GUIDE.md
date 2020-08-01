@@ -12,7 +12,7 @@ This is the CSG Style Guide. It governs the coding style of this project. Make s
 
 * The following operators must have spaces wrapping around them:
 
-   `=, +=, -=, /=, *=, //=, *, **, /, //, +, -, ==, >, <, >=, <=  `
+   `= += -= /= *= //= * ** / // + - == > < >= <=`
 
 * Commas should have at least one space following them.
 
@@ -27,7 +27,7 @@ This is the CSG Style Guide. It governs the coding style of this project. Make s
 
 * Please try to adhere to the 80-character line length limit. This makes it easier to have multiple terminals/text-editors open, without unnecessary line-wrapping. This is the rationale for the comment style as well.
 
-* Important variables should be named properly. Use underscores as word separators. Please avoid camel-case in identifiers, ie.
+* Important variables should be named properly. Use underscores as word separators. Do not use camel case, ie.
 
   ```python
   # Avoid this:
@@ -37,9 +37,19 @@ This is the CSG Style Guide. It governs the coding style of this project. Make s
   some_var = 20
   ```
 
-* There are exceptions of course. Don't name counters `this_is_a_loop_counter`, and temporary variables `this_is_a_temporary_variable`. `i` and `tmp` would suffice.
+  There are exceptions of course. Don't name counters `this_is_a_loop_counter`, and temporary variables `this_is_a_temporary_variable`. `i` and `tmp` would suffice.
+
+* Wherever possible, break up the definition of a dictionary into multiple lines, as follows:
+  ```python
+  some_dict = {
+      "key1": "val1",
+      "key2": "val2",
+      "key3": "val3",
+      "key4": "val4"
+  }
+  ```
 * Avoid global variables.
-* Strip all trailing white-spaces
+* Strip all trailing white-spaces.
 
 ### Example
 
