@@ -127,7 +127,7 @@ class PreferencesPage(QWidget):
         if STYLESHEET == DARK_STYLESHEET:
             self.dark_radio_btn.setChecked(True)
 
-        else:   
+        else:
             self.light_radio_btn.setChecked(True)
 
         layout.addWidget(theme_label)
@@ -225,7 +225,7 @@ if __name__ == "__main__":
 
     conn = sqlite3.connect(".db/csg_db.db")
     cur  = conn.cursor()
-    
+
     app = QApplication(argv)
 
     try:
@@ -253,6 +253,6 @@ if __name__ == "__main__":
 
     w = StackHolder()
 
-    conn.close()        
+    conn.close()
     w.show()
     app.exec_()
