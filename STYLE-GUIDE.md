@@ -20,7 +20,7 @@ This is the CSG Style Guide. It governs the coding style of this project. Make s
 
   ```python
   some_var = 5  # Avoid this type of comment wherever possible
-  
+
   # This is preferrable
   some_other_var = 6
   ```
@@ -32,7 +32,7 @@ This is the CSG Style Guide. It governs the coding style of this project. Make s
   ```python
   # Avoid this:
   someVar = 20
-  
+
   # Use this instead:
   some_var = 20
   ```
@@ -61,12 +61,12 @@ def some_function(param1, param2):
     some_function():
     	Useless function that returns param1 after
     	running a useless loop to make param1 = param2
-    	
+
     	NOTE: param1 should be less than param2
     """
     # Loop until equal
     while param1 < param2:
         param1 += 1
-    
+
     return param1
 ```
