@@ -100,19 +100,27 @@ class PeriodicTable:
         return list(self.groups[num].keys())
 
 class Stats:
-    def __init__(self, ca, nca_dict):
+    def __init__(self, ca_dict, nca_dict):
         pt = PeriodicTable()
-        self.c_atom = ca
-        self.c_atom_val = pt.get_valency(ca)
-        self.c_atom_nval_e = pt.get_nvalence_electrons(ca)
+
+        self.c_atom_dict = ca_dict
+        self.c_atom, self.c_atom_sub = list(ca_dict.keys())[0], list(ca_dict.values())[0]
+        self.c_atom_val = 0
+        self.c_atom_nval_e = 0
+        for c_atom in ca_dict:
+            self.c_atom_val = pt.get_valency(c_atom)
+            self.c_atom_nval_e = pt.get_nvalence_electrons(c_atom)
+            break
 
         self.nc_atom_dict = nca_dict
-        self.nc_atom_val_list = []
-        self.nc_atom_nval_e_list = []
-
-        for el in nca_dict:
-            self.nc_atom_val_list.append(pt.get_valency(el))
-            self.nc_atom_nval_e_list.append(pt.get_nvalence_electrons(el))
+        self.nc_atom, self.nc_atom_sub = list(nca_dict.keys())[0], list(nca_dict.values())[0]
+        self.nc_atom_val = 0
+        self.nc_atom_nval_e = 0
+        for nc_atom in nca_dict:
+            self.nc_atom_val = pt.get_valency(nc_atom)
+            self.nc_atom_nval_e = pt.get_nvalence_electrons(nc_atom)
+            self.print_statsnc_atom_nval_e = pt.get_nvalence_electrons(nc_atom)
+            break
 
     # This exists for debugging purposes
     def print_stats(self):
@@ -124,6 +132,6 @@ class Stats:
         print()
 
         print("=== NON-CENTRAL ATOM(S) ===")
-        print("\tAtom\t\t\t\t", self.nc_atom_dict)
-        print("\tValency:\t\t\t", self.nc_atom_val_list)
-        print("\tNo. of valence electrons:\t", self.nc_atom_nval_e_list)
+        print("\tAtom\t\t\t\t", self.nc_atom)
+        print("\tValency:\t\t\t", self.nc_atom_val)
+        print("\tNo. of valence electrons:\t", self.nc_atom_nval_e)

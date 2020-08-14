@@ -87,7 +87,9 @@ def main():
 
         if valid:
             lp = get_lp(element_dict)
-            print(f"Lone Pairs: {lp}")
+            print("{:<10} : {:<6}".format("Lone Pairs", lp))
+            print("{:<10} : {:<6}".format("Geometry",
+                                          classify_geometry(element_dict, lp)))
 
     conn.close()
 
@@ -304,8 +306,13 @@ def validate(element_dict):
     @kannan the exceptions are taken care of by the various oxidation states
     listed in `oxidn_states` (only for compounds with 2 elements)
     """
+    # Checking for deviation from strictly 2 elements
+    if len(element_dict) > 2:
+        print("Enter compound with 2 elements.")
+        return False
+
     pt = PeriodicTable()
-    first_element_charges, second_element_charges, third_element_charges, element_list = [], [], [], []
+    first_element_charges, second_element_charges, element_list = [], [], []
     net_charge_zero = False
     element_list = []
 
@@ -318,11 +325,6 @@ def validate(element_dict):
         else:
             element_list.append(el)
 
-    # Check for deviation from strictly 2 elements
-    if len(element_list) not in [2, 3]:
-        print("Enter a valid chemical")
-        return False
-
     # Creating lists of total charge on individual elements in order to
     # be able to equate their sum to zero.
     for variable_oxidn_state in oxidn_states[element_list[0]]:
@@ -331,26 +333,14 @@ def validate(element_dict):
     for variable_oxidn_state in oxidn_states[element_list[1]]:
         second_element_charges.append(element_dict[element_list[1]] * variable_oxidn_state)
 
-    if len(element_list) == 3:
-        for variable_oxidn_state in oxidn_states[element_list[2]]:
-            third_element_charges.append(element_dict[element_list[2]] * variable_oxidn_state)
-
-
     # Summation to find the net charge. Validity of input auto-falsifies
     # if it fails to show zero net charge.
     for i in range(len(first_element_charges)):
         for j in range(len(second_element_charges)):
-            if len(element_list) == 3:
-                for k in range(len(third_element_charges)):
-                    net_charge = first_element_charges[i] + second_element_charges[j] + third_element_charges[k]
-                    if net_charge == 0:
-                        net_charge_zero = True
-                        break
-            else:
-                net_charge = first_element_charges[i] + second_element_charges[j]
-                if net_charge == 0:
-                    net_charge_zero = True
-                    break
+            net_charge = first_element_charges[i] + second_element_charges[j]
+            if net_charge == 0:
+                net_charge_zero = True
+                break
 
     if not net_charge_zero:
         print("Enter a valid chemical")
@@ -360,40 +350,48 @@ def validate(element_dict):
         return True
 
 
-def get_compound_stats(element_dict):
+def get_compound_stats(element_dict) -> Stats:
     pt = PeriodicTable()
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
-    central_atom = ""
+    # Central atom
+    ca = ""
+
+    # Central atom subscript
+    ca_sub = 1
 
     min_sub = min(subscripts)
     if subscripts.count(min_sub) == 1:
-        central_atom = elements[subscripts.index(min_sub)]
+        i = subscripts.index(min_sub)
+        ca = elements[i]
+        ca_sub = subscripts[i]
 
-    elif len(elements) == 3:
-        max_valence_electrons = 0
-        for el in elements:
-            nv_e = pt.get_nvalence_electrons(el)
+    if ca == "":
+        ca = elements[0]
+        ca_sub = subscripts[0]
 
-            if element_dict[el] == 1:
-                if nv_e > max_valence_electrons:
-                    max_valence_electrons = nv_e
-                    central_atom = el
+    ca_dict = {ca: ca_sub}
 
-    if central_atom == "":
-        central_atom = elements[0]
-
-    # List of non central atoms
     nca_dict = {}
+    nca_sub = 1
 
-    for el in elements:
-        if el != central_atom:
-            nca_dict[el] = element_dict[el]
+    # for el in elements:
+    #     if el != central_atom:
+    #         nca_dict[el] = element_dict[el]
 
-    stats = Stats(central_atom, nca_dict)
+    nca = ""
+    for elem in elements:
+        if elem != ca:
+            nca = elem
+            nca_sub = subscripts[elements.index(nca)]
+
+    nca_dict = {nca: nca_sub}
+
+    stats = Stats(ca_dict, nca_dict)
 
     return stats
+
 
 def get_lp(element_dict):
     """
@@ -403,53 +401,23 @@ def get_lp(element_dict):
     pt = PeriodicTable()
     stats = get_compound_stats(element_dict)
 
-    # Dictionary of non-central atoms
-    nc_atoms = stats.nc_atom_dict
-
     # 'Lone pairs' is initialized to the number of valence electrons
     # of the central atom.
     #
-    # We are utilizing this formula:
+    # Using this formula:
     #       lp = (c_atom valence electrons - number of bond pair e's) / 2
-    lp = stats.c_atom_nval_e
-    bp = 0
-
-    for el in nc_atoms:
-        bp += pt.get_valency(el) * nc_atoms[el]
+    lp = stats.c_atom_nval_e * stats.c_atom_sub
+    bp = pt.get_valency(stats.nc_atom) * stats.nc_atom_sub
 
     lp = (lp - bp) / 2
 
     return lp
 
-def classify_geometry(element_dict, lp):
-    """
-    classify_geometry():
-        Classifies the geometry of a given compound, given
-        `element_dict` (see get_elements()) and number of
-        lone pairs `lp` (see get_lp()).
-
-        This function returns a dictionary.
-
-    Example:
-        classify_geometry({'H': 2, 'O': 1}, 1) returns
-        {'A': 1, 'B': 2, 'L': 1}
-    """
-
-    # This dictionary holds the final classification.
-    geometry = {'A': 1, 'B': 1, 'L': 0}
-
-    for el in element_dict:
-        if element_dict[el] > 1:
-            geometry['B'] = element_dict[el]
-            break
-
-    geometry['L'] = int(lp)
-    return geometry
-
 
 def gdict_to_str(geometry_dict):
     """
     gdict_to_str():
+        Helper function for classify_geometry().
         Coverts a geometry dictionary to string.
 
     Example:
@@ -471,6 +439,26 @@ def gdict_to_str(geometry_dict):
             geometry_str += el
 
     return geometry_str
+
+def classify_geometry(element_dict, lp):
+    """
+    classify_geometry():
+        Classifies the geometry of a given compound, given
+        `element_dict` (see get_elements()) and number of
+        lone pairs `lp` (see get_lp()).
+    """
+
+    # This dictionary holds the final classification.
+    geometry = {'A': 1, 'B': 1, 'L': 0}
+
+    for el in element_dict:
+        if element_dict[el] > 1:
+            geometry['B'] = element_dict[el]
+            break
+
+    geometry['L'] = int(lp)
+
+    return gdict_to_str(geometry)
 
 
 if __name__ == "__main__":
