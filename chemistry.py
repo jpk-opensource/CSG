@@ -54,29 +54,6 @@ class PeriodicTable:
             18: 8
         }
 
-        self.trans_valency = {
-            'Sc' : [3],
-            'Ti' : [4],
-            'V'  : [5, 4],
-            'Cr' : [2],
-            'Mn' : [2, 4, 7],
-            'Fe' : [2, 3],
-            'Co' : [2, 3],
-            'Ni' : [2],
-            'Cu' : [2, 1],
-            'Zn' : [2],
-
-            'Zr' : [2, 3, 4],
-            'Pd' : [2, 4, 6],
-            'Cd' : [2, 4],
-
-            'Hf' : [4],
-            'W'  : [2, 3, 4, 5, 6],
-            'Pt' : [1, 2, 3, 4, 6],
-            'Au' : [1, 2, 3],
-            'Hg' : [1, 2]
-        }
-
     def check(self, element):
         for i in self.groups:
             if element in self.groups[i]:
