@@ -102,7 +102,7 @@ class Home(QWidget):
             self.go_btn.setDisabled(True)
 
     def go_btn_clicked(self):
-        is_valid = validate(get_elements(self.formula_field.text()))
+        is_valid = validate(self.formula_field.text())
         if is_valid:
             msg = QMessageBox.information(self, "Valid", "Nice!",
                                           QMessageBox.Ok)
