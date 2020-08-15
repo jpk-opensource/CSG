@@ -235,9 +235,12 @@ def get_elements(chem_form):
         get_elements("H2O") returns {"H": 2, "O": 1}
     """
 
+    if chem_form == None:
+        return
+
     chem_form = chem_form.strip()
     re_match = re.match("^([A-Z][a-z]?\d*){2}", chem_form)
-    if re_match.group() != chem_form:
+    if re_match == None or re_match.group() != chem_form:
         return
 
     # This stores the final elements dictionary.
