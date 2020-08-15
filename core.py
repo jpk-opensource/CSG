@@ -92,6 +92,9 @@ def main():
             print("{:<10} : {:<6}".format("Geometry",
                                           classify_geometry(element_dict, lp)))
 
+        else:
+            print("Enter a valid compound with exactly 2 elements.")
+
     conn.close()
 
 def init_csg_db():
@@ -316,7 +319,6 @@ def validate(chem_form):
 
     element_dict = get_elements(chem_form)
     if element_dict == None or len(element_dict) != 2:
-        print("Enter compound with 2 elements.")
         return False
 
     pt = PeriodicTable()
@@ -328,7 +330,6 @@ def validate(chem_form):
     # Transition metals wont properly be validated cos oxidn states is incomplete
     for el in element_dict:
         if not pt.check(el):
-            print("Enter a valid chemical")
             return False
         else:
             element_list.append(el)
@@ -351,7 +352,6 @@ def validate(chem_form):
                 break
 
     if not net_charge_zero:
-        print("Enter a valid chemical")
         return False
 
     else:
