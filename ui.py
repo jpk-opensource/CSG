@@ -1,7 +1,5 @@
-#!/usr/bin/python3
+# ui.py: CSG UI
 
-#
-#   CSG: Chemical Structure Generator
 #
 #   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
 #

@@ -1,4 +1,4 @@
-# csg_core.py: Core CSG functions
+# core.py: Core CSG functions
 
 #
 #   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
