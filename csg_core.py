@@ -18,6 +18,7 @@
 #
 
 import sqlite3
+import re
 from os         import path, mkdir
 from chemistry  import PeriodicTable, Stats
 
@@ -82,10 +83,10 @@ def main():
             run_builtin_cmd(chem_form.split())
             continue
 
-        element_dict = get_elements(chem_form)
-        valid = validate(element_dict)
+        valid = validate(chem_form)
 
         if valid:
+            element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry",
@@ -235,6 +236,9 @@ def get_elements(chem_form):
     """
 
     chem_form = chem_form.strip()
+    re_match = re.match("^([A-Z][a-z]?\d*){2}", chem_form)
+    if re_match.group() != chem_form:
+        return
 
     # This stores the final elements dictionary.
     element_dict = {}
@@ -290,7 +294,7 @@ def get_elements(chem_form):
     return element_dict
 
 
-def validate(element_dict):
+def validate(chem_form):
     """
     Checks if
         (a) Input chemical has only 2 elements
@@ -301,13 +305,14 @@ def validate(element_dict):
             achieved by taking into account the oxidn states of each
            element)
 
-    :parameter element_dict is a dictionary (see element_dict from main())
+    :parameter chem_form is a string
     :returns boolean
     @kannan the exceptions are taken care of by the various oxidation states
     listed in `oxidn_states` (only for compounds with 2 elements)
     """
-    # Checking for deviation from strictly 2 elements
-    if len(element_dict) > 2:
+
+    element_dict = get_elements(chem_form)
+    if element_dict == None or len(element_dict) != 2:
         print("Enter compound with 2 elements.")
         return False
 
