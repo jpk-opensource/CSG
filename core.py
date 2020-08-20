@@ -20,7 +20,7 @@
 import sqlite3
 import re
 from os         import path, mkdir
-from chemistry  import PeriodicTable, Stats
+from chemistry  import *
 
 oxidn_states = {
     'H': [-1, 1],
@@ -114,16 +114,20 @@ def init_csg_db():
     try:
         cur.execute("SELECT * FROM history;")
 
-    except Exception:
-        print("[!] History table does not exist. Creating now...")
-        table_str = "history("                                      \
-                    "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
-                    "    command VARCHAR(32),"                      \
-                    "    type VARCHAR(32)"                          \
-                    ")"
+    except sqlite3.OperationalError as ex:
+        if "no such table" in str(ex):
+            print("[!] History table does not exist. Creating now...")
+            table_str = "history("                                      \
+                        "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
+                        "    command VARCHAR(32),"                      \
+                        "    type VARCHAR(32)"                          \
+                        ")"
 
-        cur.execute(f"CREATE TABLE {table_str};")
-        print(f"[{tick}] Done!")
+            cur.execute(f"CREATE TABLE {table_str};")
+            print(f"[{tick}] Done!")
+
+        else:
+            raise
 
     conn.close()
 
@@ -242,6 +246,9 @@ def get_elements(chem_form):
         return
 
     chem_form = chem_form.strip()
+
+    # Formula should be of the form:
+    #     <Element 1>[Subscript]<Element2>[Subscript]
     re_match = re.match("^([A-Z][a-z]?\d*){2}", chem_form)
     if re_match == None or re_match.group() != chem_form:
         return
@@ -321,10 +328,9 @@ def validate(chem_form):
     if element_dict == None or len(element_dict) != 2:
         return False
 
-    pt = PeriodicTable()
+    # pt = PeriodicTable()
     first_element_charges, second_element_charges, element_list = [], [], []
     net_charge_zero = False
-    element_list = []
 
     # Populating a list of input elements if they exist
     # Transition metals wont properly be validated cos oxidn states is incomplete
@@ -351,15 +357,11 @@ def validate(chem_form):
                 net_charge_zero = True
                 break
 
-    if not net_charge_zero:
-        return False
-
-    else:
-        return True
+    return net_charge_zero
 
 
 def get_compound_stats(element_dict) -> Stats:
-    pt = PeriodicTable()
+    # pt = PeriodicTable()
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
@@ -406,7 +408,7 @@ def get_lp(element_dict):
     get_lp():
         Return the number of lone pairs in a given compound.
     """
-    pt = PeriodicTable()
+    # pt = PeriodicTable()
     stats = get_compound_stats(element_dict)
 
     # 'Lone pairs' is initialized to the number of valence electrons

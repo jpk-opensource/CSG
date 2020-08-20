@@ -21,7 +21,7 @@
 
 class PeriodicTable:
     def __init__(self):
-        self.groups = {
+        self.__groups = {
             1:  {'H': 1, 'Li': 3, 'Na': 11, 'K': 19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
             2:  {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},
             13: {'B': 5,  'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81},
@@ -32,7 +32,7 @@ class PeriodicTable:
             18: {'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86}
         }
 
-        self.group_valencies = {
+        self.__group_valencies = {
             1:  1,
             2:  2,
             13: 3,
@@ -43,7 +43,7 @@ class PeriodicTable:
             18: 0
         }
 
-        self.group_valence_electrons = {
+        self.__group_valence_electrons = {
             1: 1,
             2: 2,
             13: 3,
@@ -55,26 +55,26 @@ class PeriodicTable:
         }
 
     def check(self, element):
-        for i in self.groups:
-            if element in self.groups[i]:
+        for i in self.__groups:
+            if element in self.__groups[i]:
                 return True
         return False
 
     def get_valency(self, element):
-        for n_grp in self.groups:
-            if element in self.groups[n_grp]:
-                return self.group_valencies[n_grp]
+        for n_grp in self.__groups:
+            if element in self.__groups[n_grp]:
+                return self.__group_valencies[n_grp]
 
     def get_nvalence_electrons(self, element):
         if element == 'He':
             return 2
 
-        for n_grp in self.groups:
-            if element in self.groups[n_grp]:
-                return self.group_valence_electrons[n_grp]
+        for n_grp in self.__groups:
+            if element in self.__groups[n_grp]:
+                return self.__group_valence_electrons[n_grp]
 
     def get_group_elements(self, num):
-        return list(self.groups[num].keys())
+        return list(self.__groups[num].keys())
 
 class Stats:
     def __init__(self, ca_dict, nca_dict):
@@ -112,3 +112,5 @@ class Stats:
         print("\tAtom\t\t\t\t", self.nc_atom)
         print("\tValency:\t\t\t", self.nc_atom_val)
         print("\tNo. of valence electrons:\t", self.nc_atom_nval_e)
+
+pt = PeriodicTable()

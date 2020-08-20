@@ -215,6 +215,8 @@ def ui_main():
     global LIGHT_STYLESHEET
     global DARK_STYLESHEET
 
+    init_csg_db()
+
     with open("styles/light_theme.css") as light_theme:
         LIGHT_STYLESHEET = light_theme.read()
 
@@ -229,17 +231,21 @@ def ui_main():
     try:
         cur.execute("SELECT * FROM user_preferences;")
 
-    except Exception:
-        print("[!] User preferences table does not exist! Creating...")
-        user_preferences_table = """
-            user_preferences (
-                theme TEXT NOT NULL
-            )
-        """
-        cur.execute(f"CREATE TABLE {user_preferences_table};")
-        cur.execute("INSERT INTO user_preferences VALUES('dark');")
-        conn.commit()
-        print(f"[{tick}] Done!")
+    except sqlite3.OperationalError as ex:
+        if "no such table" in str(ex):
+            print("[!] User preferences table does not exist! Creating now...")
+            user_preferences_table = """
+                user_preferences (
+                    theme TEXT NOT NULL
+                )
+            """
+            cur.execute(f"CREATE TABLE {user_preferences_table};")
+            cur.execute("INSERT INTO user_preferences VALUES('dark');")
+            conn.commit()
+            print(f"[{tick}] Done!")
+
+        else:
+            raise
 
     cur.execute("SELECT theme FROM user_preferences;")
     theme_result = cur.fetchall()
