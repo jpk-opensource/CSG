@@ -19,8 +19,9 @@
 
 import sqlite3
 import re
-from os         import path, mkdir
-from chemistry  import *
+from os import path, mkdir
+from chemistry import *
+import matplotlib.pyplot as plt
 
 oxidn_states = {
     'H': [-1, 1],
@@ -48,6 +49,7 @@ oxidn_states = {
 }
 
 tick = '\u2713'
+
 
 def main():
     print("CSG: Chemical Structure Generator v0.1")
@@ -104,7 +106,7 @@ def init_csg_db():
         all it does is to create the history table if it doesn't exist.
     """
     if not path.isdir(".db"):
-        print("[!] .db/ does not exist. Creating now...")
+        print("[!] Connecting to .db/")
         mkdir(".db")
         print(f"[{tick}] Done!")
 
@@ -116,7 +118,7 @@ def init_csg_db():
 
     except sqlite3.OperationalError as ex:
         if "no such table" in str(ex):
-            print("[!] History table does not exist. Creating now...")
+            print("[!] Initializing History table...")
             table_str = "history("                                      \
                         "    number INTEGER PRIMARY KEY AUTOINCREMENT," \
                         "    command VARCHAR(32),"                      \
@@ -130,6 +132,77 @@ def init_csg_db():
             raise
 
     conn.close()
+
+def init_geometry_db():
+    conn = sqlite3.connect('.db/geometry.db')
+    cur = conn.cursor()
+    # create and populate tables
+    cur.execute('''create table AB(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB values('nca1', '0', '0', '1')''')
+
+    cur.execute('''create table AB2(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB2 values('nca1', '0', '-1', '0')''')
+    cur.execute('''insert into AB2 values('nca2', '0', '1', '0')''')
+
+    cur.execute('''create table AB3(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB3 values('nca1', '-0.67', '-0.5', '0')''')
+    cur.execute('''insert into AB3 values('nca2', '0.67', '-0.5', '0')''')
+    cur.execute('''insert into AB3 values('nca3', '0', '1', '0')''')
+
+    cur.execute('''create table AB4(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB4 values('nca1', '-0.67', '-0.5', '0')''')
+    cur.execute('''insert into AB4 values('nca2', '0.67', '-0.5', '-0.75')''')
+    cur.execute('''insert into AB4 values('nca3', '0', '0', '1')''')
+    cur.execute('''insert into AB4 values('nca4', '0', '1', '0')''')
+
+    cur.execute('''create table AB5(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB5 values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB5 values('nca2', '0', '0', '-3')''')
+    cur.execute('''insert into AB5 values('nca3', '2', '0', '1')''')
+    cur.execute('''insert into AB5 values('nca4', '-2', '0', '1')''')
+    cur.execute('''insert into AB5 values('nca5', '0', '-3', '0')''')
+
+    cur.execute('''create table AB6(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB6 values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB6 values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB6 values('nca3', '-2', '0', '2')''')
+    cur.execute('''insert into AB6 values('nca4', '2', '0', '-2')''')
+    cur.execute('''insert into AB6 values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB6 values('nca6', '0', '-3', '0')''')
+
+    conn.commit()
+    conn.close() #
+
 
 def run_builtin_cmd(cmd_argv):
     """
@@ -232,6 +305,7 @@ def csg_help(args):
             print("Try '/help' for more information")
             return
 
+
 def get_elements(chem_form):
     """
     get_elements():
@@ -305,7 +379,6 @@ def get_elements(chem_form):
         element_dict[cur_el] = 1
 
     return element_dict
-
 
 def validate(chem_form):
     """
@@ -402,7 +475,6 @@ def get_compound_stats(element_dict) -> Stats:
 
     return stats
 
-
 def get_lp(element_dict):
     """
     get_lp():
@@ -422,7 +494,6 @@ def get_lp(element_dict):
     lp = (lp - bp) / 2
 
     return lp
-
 
 def gdict_to_str(geometry_dict):
     """
@@ -469,6 +540,59 @@ def classify_geometry(element_dict, lp):
     geometry['L'] = int(lp)
 
     return gdict_to_str(geometry)
+
+
+def fetch_coordinates(geometry):
+    """
+        Initializing the geometry database if does not exist.
+        To be used for fetching coordinates and rendering.
+    """
+    x, y, z = [], [], []
+
+    # if not path.isdir('.db'):
+    #     print("[!] Connecting to .db/")
+    #     mkdir(".db")
+    #     print(f"[{tick}] Done!")
+
+    conn = sqlite3.connect('.db/geometry.db')
+    cur = conn.cursor()
+    try:
+        cur.execute(f'''select * from {geometry}''')
+
+    except sqlite3.OperationalError as ex:
+        if "no such table" in str(ex):
+            init_geometry_db()
+            cur.execute(f'''select * from {geometry}''')
+        else:
+            raise
+
+    for record in cur.fetchall():
+        x.append(float(record[1]))
+        y.append(float(record[2]))
+        z.append(float(record[3]))
+
+    return x, y, z
+
+def render(input_geometry):
+    """
+        Fetches the information from the `geometry` database using the input_geometry parameter.
+        Renders the input compound in 3-dimensional space using matplotlib.
+    """
+
+    x, y, z = fetch_coordinates(input_geometry)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # plotting ca, nca atoms
+    ax.plot(x, y, z, 'o')
+    ax.plot(0, 0, 0, 'o')
+
+    # plotting bonds
+    for i in range(len(x)):
+        # print(x, y, z, sep ='\t')
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-o', color='b')
+
+    plt.show()
 
 
 if __name__ == "__main__":

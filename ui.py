@@ -17,12 +17,16 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+# from mpl_toolkits.mplot3d import axes3d
+# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from sys import argv
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import *
 
 from core import *
+
 
 DEFAULT_TITLE = "CSG: Chemical Structure Generator"
 
@@ -104,8 +108,14 @@ class Home(QWidget):
     def go_btn_clicked(self):
         is_valid = validate(self.formula_field.text())
         if is_valid:
-            msg = QMessageBox.information(self, "Valid", "Nice!",
-                                          QMessageBox.Ok)
+            # msg = QMessageBox.information(self, "Valid", "Nice!",
+            #                               QMessageBox.Ok)
+            chem_form = self.formula_field.text()
+            element_dict = get_elements(chem_form)
+            lp = get_lp(element_dict)
+            geometry_str = classify_geometry(element_dict, lp)
+
+            render(geometry_str)
 
 class PreferencesPage(QWidget):
     def __init__(self, stackh, stackw):
@@ -233,7 +243,7 @@ def ui_main():
 
     except sqlite3.OperationalError as ex:
         if "no such table" in str(ex):
-            print("[!] User preferences table does not exist! Creating now...")
+            print("[!] Initializing User Preferences table...")
             user_preferences_table = """
                 user_preferences (
                     theme TEXT NOT NULL
