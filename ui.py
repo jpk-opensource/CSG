@@ -21,7 +21,7 @@
 
 # from mpl_toolkits.mplot3d import axes3d
 # import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
+
 from sys import argv
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
@@ -35,6 +35,7 @@ DEFAULT_TITLE = "CSG: Chemical Structure Generator"
 DARK_STYLESHEET = ""
 LIGHT_STYLESHEET = ""
 STYLESHEET = ""
+
 
 class Home(QWidget):
     def __init__(self):
