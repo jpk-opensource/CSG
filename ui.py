@@ -19,9 +19,6 @@
 #   along with CSG.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# from mpl_toolkits.mplot3d import axes3d
-# import matplotlib.pyplot as plt
-
 from sys import argv
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
