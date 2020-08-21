@@ -3,7 +3,7 @@
 #
 #   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
 #
-#   This file is part of CSG
+#   This file is part of CSG.
 #
 #   CSG is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
