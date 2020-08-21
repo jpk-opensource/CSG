@@ -108,7 +108,7 @@ def init_csg_db():
         all it does is to create the history table if it doesn't exist.
     """
     if not path.isdir(".db"):
-        print("[!] Connecting to .db/")
+        print("[!] Creating database directory...")
         mkdir(".db")
         print(f"[{tick}] Done!")
 
@@ -550,11 +550,6 @@ def fetch_coordinates(geometry):
         To be used for fetching coordinates and rendering.
     """
     x, y, z = [], [], []
-
-    # if not path.isdir('.db'):
-    #     print("[!] Connecting to .db/")
-    #     mkdir(".db")
-    #     print(f"[{tick}] Done!")
 
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
