@@ -29,13 +29,11 @@ from PyQt5.QtCore import *
 
 from core import *
 
-
 DEFAULT_TITLE = "CSG: Chemical Structure Generator"
 
 DARK_STYLESHEET = ""
 LIGHT_STYLESHEET = ""
 STYLESHEET = ""
-
 
 class Home(QWidget):
     def __init__(self):

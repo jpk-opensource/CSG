@@ -326,7 +326,7 @@ def get_elements(chem_form):
     # Formula should be of the form:
     #     <Element 1>[Subscript]<Element2>[Subscript]
     re_match = re.match("^([A-Z][a-z]?\d*){2}", chem_form)
-    if re_match is None or re_match.group() != chem_form:
+    if re_match == None or re_match.group() != chem_form:
         return
 
     # This stores the final elements dictionary.
