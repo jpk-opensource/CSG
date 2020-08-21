@@ -22,19 +22,19 @@
 class PeriodicTable:
     def __init__(self):
         self.__groups = {
-            1:  {'H': 1, 'Li': 3, 'Na': 11, 'K': 19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
-            2:  {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},
-            13: {'B': 5,  'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81},
-            14: {'C': 6,  'Si': 14, 'Ge': 32, 'Sn': 50, 'Pb': 82},
-            15: {'N': 7,  'P': 15,  'As': 33, 'Sb': 51, 'Bi': 83},
-            16: {'O': 8,  'S': 16,  'Se': 34, 'Te': 52, 'Po': 84},
-            17: {'F': 9,  'Cl': 17, 'Br': 35, 'I': 53,  'At': 85},
+            1: {'H': 1, 'Li': 3, 'Na': 11, 'K': 19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
+            2: {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},
+            13: {'B': 5, 'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81},
+            14: {'C': 6, 'Si': 14, 'Ge': 32, 'Sn': 50, 'Pb': 82},
+            15: {'N': 7, 'P': 15, 'As': 33, 'Sb': 51, 'Bi': 83},
+            16: {'O': 8, 'S': 16, 'Se': 34, 'Te': 52, 'Po': 84},
+            17: {'F': 9, 'Cl': 17, 'Br': 35, 'I': 53, 'At': 85},
             18: {'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86}
         }
 
         self.__group_valencies = {
-            1:  1,
-            2:  2,
+            1: 1,
+            2: 2,
             13: 3,
             14: 4,
             15: 3,
@@ -76,6 +76,7 @@ class PeriodicTable:
     def get_group_elements(self, num):
         return list(self.__groups[num].keys())
 
+
 class Stats:
     def __init__(self, ca_dict, nca_dict):
         pt = PeriodicTable()
@@ -112,5 +113,6 @@ class Stats:
         print("\tAtom\t\t\t\t", self.nc_atom)
         print("\tValency:\t\t\t", self.nc_atom_val)
         print("\tNo. of valence electrons:\t", self.nc_atom_nval_e)
+
 
 pt = PeriodicTable()

@@ -21,15 +21,15 @@
 
 from core import main
 from ui import ui_main
-
 from sys import argv
+
 
 def start_csg():
     if "--cli" in argv:
         main()
-
     else:
         ui_main()
+
 
 if __name__ == "__main__":
     start_csg()
