@@ -23,7 +23,6 @@ from core import main
 from ui import ui_main
 from sys import argv
 
-
 def start_csg():
     if "--cli" in argv:
         main()
