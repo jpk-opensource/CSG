@@ -485,7 +485,6 @@ def validate(chem_form):
     if element_dict is None or len(element_dict) != 2:
         return False
 
-    # pt = PeriodicTable()
     first_element_charges, second_element_charges, element_list = [], [], []
     net_charge_zero = False
 
@@ -518,7 +517,6 @@ def validate(chem_form):
 
 
 def get_compound_stats(element_dict) -> Stats:
-    # pt = PeriodicTable()
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
@@ -543,10 +541,6 @@ def get_compound_stats(element_dict) -> Stats:
     nca_dict = {}
     nca_sub = 1
 
-    # for el in elements:
-    #     if el != central_atom:
-    #         nca_dict[el] = element_dict[el]
-
     nca = ""
     for elem in elements:
         if elem != ca:
@@ -564,7 +558,7 @@ def get_lp(element_dict):
     get_lp():
         Return the number of lone pairs in a given compound.
     """
-    # pt = PeriodicTable()
+
     stats = get_compound_stats(element_dict)
 
     # 'Lone pairs' is initialized to the number of valence electrons
@@ -655,8 +649,9 @@ def fetch_coordinates(geometry):
 # Is text required??
 def render(input_geometry, element_dict):
     """
-        Fetches the information from the `geometry` database using the input_geometry parameter.
-        Renders the input compound in 3-dimensional space using matplotlib.
+        Fetches the information from the `geometry` database using the
+        input_geometry parameter. Renders the input compound in 3-dimensional
+        space using matplotlib.
     """
 
     x, y, z = fetch_coordinates(input_geometry)
