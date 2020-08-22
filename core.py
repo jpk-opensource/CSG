@@ -660,7 +660,7 @@ def render(input_geometry, element_dict):
         Fetches the information from the `geometry` database using the input_geometry parameter.
         Renders the input compound in 3-dimensional space using matplotlib.
     """
-    pt = PeriodicTable()
+
     x, y, z = fetch_coordinates(input_geometry)
 
     ca, nca = '', ''
@@ -672,8 +672,8 @@ def render(input_geometry, element_dict):
         if element_dict[ele] == 1:
             ca = ele
             element_list.remove(ca)
-    else:
-        nca = element_list[0]
+            break
+    nca = element_list[0]
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
