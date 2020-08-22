@@ -27,29 +27,29 @@ import matplotlib.pyplot as plt
 
 
 oxidn_states = {
-    'H': [-1, 1],
+    'H':  [-1, 1],
     'He': [0],
     'Li': [1],
     'Be': [2],
-    'B': [3],
-    'C': [-4, 2, 4],
-    'N': [-3, -2, 4],  # There are more ig. have to look into this
-    'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
-    'F': [-1, 1],
+    'B':  [3],
+    'C':  [-4, 2, 4],
+    'N':  [-3, -2, 4],  # There are more ig. have to look into this
+    'O':  [-2, -1, 1, 2],  # Must include -0.5, which causes errors
+    'F':  [-1, 1],
     'Ne': [0],
     'Na': [1],
     'Mg': [2],
     'Al': [3],
     'Si': [4],
-    'P': [3, 5],
-    'S': [-2, 4, 6],
+    'P':  [3, 5],
+    'S':  [-2, 4, 6],
     'Cl': [-1],  # Check this. I doubt other halogens other than F
                  # have only one oxidation state
     'Ar': [0],
-    'K': [1],
+    'K':  [1],
     'Ca': [2],
     'Br': [-1, 1, 3, 5, 7],
-    'I': [-1, 1, 3, 5, 7],
+    'I':  [-1, 1, 3, 5, 7],
     'Xe': [2, 4, 6, 8]
 }
 
@@ -217,20 +217,20 @@ def init_geometry_db():
     cur.execute('''insert into AB2L values('nca1', '-0.8', '-0.1', '0')''')
     cur.execute('''insert into AB2L values('nca2', '0.8', '-0.1', '0')''')
 
-    cur.execute('''create table AB3L( 
+    cur.execute('''create table AB3L(
                         atom text,
                         x text,
-                        y text, 
+                        y text,
                         z text)
                         ''')
     cur.execute('''insert into AB3L values('nca1', '-0.4', '-0.5', '-0.5')''')
     cur.execute('''insert into AB3L values('nca2', '0.4', '-0.5', '-0.5')''')
     cur.execute('''insert into AB3L values('nca4', '0', '1', '-0.5')''')
 
-    cur.execute('''create table AB4L( 
+    cur.execute('''create table AB4L(
                            atom text,
                            x text,
-                           y text, 
+                           y text,
                            z text)
                            ''')
     cur.execute('''insert into AB4L values('nca1', '0', '3', '0')''')
@@ -238,10 +238,10 @@ def init_geometry_db():
     cur.execute('''insert into AB4L values('nca4', '-2', '0', '-1')''')
     cur.execute('''insert into AB4L values('nca5', '0', '-3', '0')''')
 
-    cur.execute('''create table AB5L( 
+    cur.execute('''create table AB5L(
                                atom text,
                                x text,
-                               y text, 
+                               y text,
                                z text)
                                ''')
     cur.execute('''insert into AB5L values('nca1', '0', '3', '0.5')''')
@@ -479,8 +479,6 @@ def validate(chem_form):
 
     :parameter chem_form is a string
     :returns boolean
-    @kannan the exceptions are taken care of by the various oxidation states
-    listed in `oxidn_states` (only for compounds with 2 elements)
     """
 
     element_dict = get_elements(chem_form)
@@ -654,7 +652,7 @@ def fetch_coordinates(geometry):
 
     return x, y, z
 
-# is text required??
+# Is text required??
 def render(input_geometry, element_dict):
     """
         Fetches the information from the `geometry` database using the input_geometry parameter.
@@ -667,28 +665,25 @@ def render(input_geometry, element_dict):
     element_list = []
     for ele in element_dict:
         element_list.append(ele)
+
     for ele in element_dict:
-        # print(ele)
         if element_dict[ele] == 1:
             ca = ele
             element_list.remove(ca)
             break
+
     nca = element_list[0]
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.set_axis_off()
-    # print('heyy')
-    # plotting ca, nca atoms
     ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
-    # print('heyyy')
     ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
 
-    # plotting bonds
+    # Plotting bonds
     for i in range(len(x)):
-        # ax.text(x[i], y[i], z[i], nca, size=15, color='b')
         ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c='g', alpha=0.75)
-    # ax.text(0, 0, 0, ca, size=13, color='r')
+
     plt.show()
 
 
