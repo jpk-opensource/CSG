@@ -25,28 +25,31 @@ from os import path, mkdir
 from chemistry import *
 import matplotlib.pyplot as plt
 
+
 oxidn_states = {
-    'H': [-1, 1],
+    'H':  [-1, 1],
     'He': [0],
     'Li': [1],
     'Be': [2],
-    'B': [3],
-    'C': [-4, 2, 4],
-    'N': [-3, -2, 4],  # There are more ig. have to look into this
-    'O': [-2, -1, 1, 2],  # Must include -0.5, which causes errors
-    'F': [-1, 1],
+    'B':  [3],
+    'C':  [-4, 2, 4],
+    'N':  [-3, -2, 4],  # There are more ig. have to look into this
+    'O':  [-2, -1, 1, 2],  # Must include -0.5, which causes errors
+    'F':  [-1, 1],
     'Ne': [0],
     'Na': [1],
     'Mg': [2],
     'Al': [3],
     'Si': [4],
-    'P': [3, 5],
-    'S': [-2, 4, 6],
+    'P':  [3, 5],
+    'S':  [-2, 4, 6],
     'Cl': [-1],  # Check this. I doubt other halogens other than F
                  # have only one oxidation state
     'Ar': [0],
-    'K': [1],
+    'K':  [1],
     'Ca': [2],
+    'Br': [-1, 1, 3, 5, 7],
+    'I':  [-1, 1, 3, 5, 7],
     'Xe': [2, 4, 6, 8]
 }
 
@@ -92,6 +95,7 @@ def main():
         if valid:
             element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)
+            print(element_dict)
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry",
                                           classify_geometry(element_dict, lp)))
@@ -138,7 +142,8 @@ def init_csg_db():
 def init_geometry_db():
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
-    # create and populate tables
+
+    # compounds without lp
     cur.execute('''create table AB(
                                 atom text,
                                 x text,
@@ -164,7 +169,7 @@ def init_geometry_db():
                                 ''')
     cur.execute('''insert into AB3 values('nca1', '-0.67', '-0.5', '0')''')
     cur.execute('''insert into AB3 values('nca2', '0.67', '-0.5', '0')''')
-    cur.execute('''insert into AB3 values('nca3', '0', '1', '0')''')
+    cur.execute('''insert into AB3 values('nca3', '0', '0.67', '0')''')
 
     cur.execute('''create table AB4(
                                 atom text,
@@ -172,10 +177,10 @@ def init_geometry_db():
                                 y text,
                                 z text)
                                 ''')
-    cur.execute('''insert into AB4 values('nca1', '-0.67', '-0.5', '0')''')
-    cur.execute('''insert into AB4 values('nca2', '0.67', '-0.5', '-0.75')''')
+    cur.execute('''insert into AB4 values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB4 values('nca2', '0.4', '-0.5', '-0.5')''')
     cur.execute('''insert into AB4 values('nca3', '0', '0', '1')''')
-    cur.execute('''insert into AB4 values('nca4', '0', '1', '0')''')
+    cur.execute('''insert into AB4 values('nca4', '0', '1', '-0.5')''')
 
     cur.execute('''create table AB5(
                                 atom text,
@@ -184,7 +189,7 @@ def init_geometry_db():
                                 z text)
                                 ''')
     cur.execute('''insert into AB5 values('nca1', '0', '3', '0')''')
-    cur.execute('''insert into AB5 values('nca2', '0', '0', '-3')''')
+    cur.execute('''insert into AB5 values('nca2', '0', '0', '-2')''')
     cur.execute('''insert into AB5 values('nca3', '2', '0', '1')''')
     cur.execute('''insert into AB5 values('nca4', '-2', '0', '1')''')
     cur.execute('''insert into AB5 values('nca5', '0', '-3', '0')''')
@@ -202,8 +207,82 @@ def init_geometry_db():
     cur.execute('''insert into AB6 values('nca5', '-2', '0', '-2')''')
     cur.execute('''insert into AB6 values('nca6', '0', '-3', '0')''')
 
+    # compounds with lp
+    cur.execute('''create table AB2L(
+                        atom text,
+                        x text,
+                        y text,
+                        z text)
+                        ''')
+    cur.execute('''insert into AB2L values('nca1', '-0.8', '-0.1', '0')''')
+    cur.execute('''insert into AB2L values('nca2', '0.8', '-0.1', '0')''')
+
+    cur.execute('''create table AB3L(
+                        atom text,
+                        x text,
+                        y text,
+                        z text)
+                        ''')
+    cur.execute('''insert into AB3L values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB3L values('nca2', '0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB3L values('nca4', '0', '1', '-0.5')''')
+
+    cur.execute('''create table AB4L(
+                           atom text,
+                           x text,
+                           y text,
+                           z text)
+                           ''')
+    cur.execute('''insert into AB4L values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB4L values('nca3', '2', '0', '-1')''')
+    cur.execute('''insert into AB4L values('nca4', '-2', '0', '-1')''')
+    cur.execute('''insert into AB4L values('nca5', '0', '-3', '0')''')
+
+    cur.execute('''create table AB5L(
+                               atom text,
+                               x text,
+                               y text,
+                               z text)
+                               ''')
+    cur.execute('''insert into AB5L values('nca1', '0', '3', '0.5')''')
+    cur.execute('''insert into AB5L values('nca2', '2', '0', '2.5')''')
+    cur.execute('''insert into AB5L values('nca3', '-2', '0', '2')''')
+    cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
+    cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
+
+    # compounds with 2 lp
+    cur.execute('''create table AB2L2(
+                                 atom text,
+                                 x text,
+                                 y text,
+                                 z text)
+                                 ''')
+    cur.execute('''insert into AB2L2 values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB2L2 values('nca2', '0.4', '-0.5', '-0.5')''')
+
+    cur.execute('''create table AB3L2(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB3L2 values('nca2', '0', '0', '-2')''')
+    cur.execute('''insert into AB3L2 values('nca3', '2', '0', '1')''')
+    cur.execute('''insert into AB3L2 values('nca4', '-2', '0', '1')''')
+
+    cur.execute('''create table AB4L2(
+                                    atom text,
+                                    x text,
+                                    y text,
+                                    z text)
+                                    ''')
+    cur.execute('''insert into AB4L2 values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB4L2 values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB4L2 values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB4L2 values('nca6', '0', '-3', '0')''')
+
     conn.commit()
-    conn.close() #
+    conn.close()
 
 
 def run_builtin_cmd(cmd_argv):
@@ -382,6 +461,11 @@ def get_elements(chem_form):
 
     return element_dict
 
+# ClO IS A BUG
+# CL2O IS A BUG
+# NO IS A BUG
+# CLF3 IS A BUG
+# ADD HALOGENS, ETC... TO oxidn_states
 def validate(chem_form):
     """
     Checks if
@@ -395,15 +479,12 @@ def validate(chem_form):
 
     :parameter chem_form is a string
     :returns boolean
-    @kannan the exceptions are taken care of by the various oxidation states
-    listed in `oxidn_states` (only for compounds with 2 elements)
     """
 
     element_dict = get_elements(chem_form)
     if element_dict is None or len(element_dict) != 2:
         return False
 
-    # pt = PeriodicTable()
     first_element_charges, second_element_charges, element_list = [], [], []
     net_charge_zero = False
 
@@ -436,7 +517,6 @@ def validate(chem_form):
 
 
 def get_compound_stats(element_dict) -> Stats:
-    # pt = PeriodicTable()
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
@@ -461,10 +541,6 @@ def get_compound_stats(element_dict) -> Stats:
     nca_dict = {}
     nca_sub = 1
 
-    # for el in elements:
-    #     if el != central_atom:
-    #         nca_dict[el] = element_dict[el]
-
     nca = ""
     for elem in elements:
         if elem != ca:
@@ -482,7 +558,7 @@ def get_lp(element_dict):
     get_lp():
         Return the number of lone pairs in a given compound.
     """
-    # pt = PeriodicTable()
+
     stats = get_compound_stats(element_dict)
 
     # 'Lone pairs' is initialized to the number of valence electrons
@@ -570,24 +646,38 @@ def fetch_coordinates(geometry):
 
     return x, y, z
 
-def render(input_geometry):
+# Is text required??
+def render(input_geometry, element_dict):
     """
-        Fetches the information from the `geometry` database using the input_geometry parameter.
-        Renders the input compound in 3-dimensional space using matplotlib.
+        Fetches the information from the `geometry` database using the
+        input_geometry parameter. Renders the input compound in 3-dimensional
+        space using matplotlib.
     """
 
     x, y, z = fetch_coordinates(input_geometry)
+
+    ca, nca = '', ''
+    element_list = []
+    for ele in element_dict:
+        element_list.append(ele)
+
+    for ele in element_dict:
+        if element_dict[ele] == 1:
+            ca = ele
+            element_list.remove(ca)
+            break
+
+    nca = element_list[0]
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+    ax.set_axis_off()
+    ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
+    ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
 
-    # plotting ca, nca atoms
-    ax.plot(x, y, z, 'o')
-    ax.plot(0, 0, 0, 'o')
-
-    # plotting bonds
+    # Plotting bonds
     for i in range(len(x)):
-        # print(x, y, z, sep ='\t')
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-o', color='b')
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c='g', alpha=0.75)
 
     plt.show()
 

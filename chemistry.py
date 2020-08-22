@@ -21,8 +21,12 @@
 
 class PeriodicTable:
     def __init__(self):
+        #
+        #       PLEASE DO NOT MESS WITH THE ALIGNMENT
+        #       This comment will be removed in a later commit
+        #
         self.__groups = {
-            1:  {'H':  1, 'Li':  3, 'Na': 11, 'K':  19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
+            1:  {'H':  1, 'Li': 3,  'Na': 11, 'K':  19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
             2:  {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},
             13: {'B':  5, 'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81},
             14: {'C':  6, 'Si': 14, 'Ge': 32, 'Sn': 50, 'Pb': 82},
@@ -54,6 +58,51 @@ class PeriodicTable:
             18: 8
         }
 
+        self.__atomic_numbers = {
+            'H':  1,
+            'He': 2,
+            'Li': 3,
+            'Be': 4,
+            'B':  5,
+            'C':  6,
+            'N':  7,
+            'O':  8,
+            'F':  9,
+            'Ne': 10,
+            'Na': 11,
+            'Mg': 12,
+            'Al': 13,
+            'Si': 14,
+            'P':  15,
+            'S':  16,
+            'Cl': 17,
+            'Ar': 18,
+            'K':  19,
+            'Ca': 20,
+            'Br': 35,
+            'I':  53,
+            'Xe': 54
+        }
+
+
+        self.__atomic_colors = [
+            (135, 206, 235), (217, 255, 255), (204, 128, 255), (194, 255, 0),
+            (255, 181, 181), (144, 144, 144), (48, 80, 248),   (255, 13, 13),
+            (144, 224, 80),  (179, 227, 245), (171, 92, 242),  (138, 255, 0),
+            (191, 166, 166), (240, 200, 160), (255, 128, 0),   (255, 255, 48),
+            (31, 240, 31),   (128, 209, 227), (143, 64, 212),  (61, 225, 0),
+            (230, 230, 230), (191, 194, 199), (166, 166, 171), (138, 153, 199),
+            (156, 122, 199), (224, 102, 51),  (240, 144, 160), (80, 208, 80),
+            (200, 128, 51),  (125, 128, 176), (194, 143, 143), (102, 143, 143),
+            (189, 128, 227), (225, 161, 0),   (166, 41, 41),   (92, 184, 209),
+            (112, 46, 176),  (0, 255, 0),     (148, 255, 255), (148, 224, 224),
+            (115, 194, 201), (84, 181, 181),  (59, 158, 158),  (36, 143, 143),
+            (10, 125, 140),  (0, 105, 133),   (192, 192, 192), (255, 217, 143),
+            (166, 117, 115), (102, 128, 128), (158, 99, 181),  (212, 122, 0),
+            (148, 0, 148),   (66, 158, 176),  (87, 23, 143),   (0, 201, 0),
+            (112, 212, 255)
+        ]
+
     def check(self, element):
         for i in self.__groups:
             if element in self.__groups[i]:
@@ -75,6 +124,17 @@ class PeriodicTable:
 
     def get_group_elements(self, num):
         return list(self.__groups[num].keys())
+
+    def get_markersize(self, element):
+        return self.__atomic_numbers[element] + 4
+
+    def get_markercolor(self, element):
+        atomic_number = self.__atomic_numbers[element]
+        temp = list(self.__atomic_colors[atomic_number - 1])
+        color_list = []
+        for rgb in temp:
+            color_list.append(rgb / 255)
+        return color_list
 
 
 class Stats:
