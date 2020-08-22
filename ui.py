@@ -113,7 +113,7 @@ class Home(QWidget):
             lp = get_lp(element_dict)
             geometry_str = classify_geometry(element_dict, lp)
 
-            render(geometry_str)
+            render(geometry_str, element_dict)
 
 class PreferencesPage(QWidget):
     def __init__(self, stackh, stackw):

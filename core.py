@@ -25,6 +25,7 @@ from os import path, mkdir
 from chemistry import *
 import matplotlib.pyplot as plt
 
+
 oxidn_states = {
     'H': [-1, 1],
     'He': [0],
@@ -47,6 +48,8 @@ oxidn_states = {
     'Ar': [0],
     'K': [1],
     'Ca': [2],
+    'Br': [-1, 1, 3, 5, 7],
+    'I': [-1, 1, 3, 5, 7],
     'Xe': [2, 4, 6, 8]
 }
 
@@ -92,6 +95,7 @@ def main():
         if valid:
             element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)
+            print(element_dict)
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry",
                                           classify_geometry(element_dict, lp)))
@@ -138,7 +142,8 @@ def init_csg_db():
 def init_geometry_db():
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
-    # create and populate tables
+
+    # compounds without lp
     cur.execute('''create table AB(
                                 atom text,
                                 x text,
@@ -164,7 +169,7 @@ def init_geometry_db():
                                 ''')
     cur.execute('''insert into AB3 values('nca1', '-0.67', '-0.5', '0')''')
     cur.execute('''insert into AB3 values('nca2', '0.67', '-0.5', '0')''')
-    cur.execute('''insert into AB3 values('nca3', '0', '1', '0')''')
+    cur.execute('''insert into AB3 values('nca3', '0', '0.67', '0')''')
 
     cur.execute('''create table AB4(
                                 atom text,
@@ -172,10 +177,10 @@ def init_geometry_db():
                                 y text,
                                 z text)
                                 ''')
-    cur.execute('''insert into AB4 values('nca1', '-0.67', '-0.5', '0')''')
-    cur.execute('''insert into AB4 values('nca2', '0.67', '-0.5', '-0.75')''')
+    cur.execute('''insert into AB4 values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB4 values('nca2', '0.4', '-0.5', '-0.5')''')
     cur.execute('''insert into AB4 values('nca3', '0', '0', '1')''')
-    cur.execute('''insert into AB4 values('nca4', '0', '1', '0')''')
+    cur.execute('''insert into AB4 values('nca4', '0', '1', '-0.5')''')
 
     cur.execute('''create table AB5(
                                 atom text,
@@ -184,7 +189,7 @@ def init_geometry_db():
                                 z text)
                                 ''')
     cur.execute('''insert into AB5 values('nca1', '0', '3', '0')''')
-    cur.execute('''insert into AB5 values('nca2', '0', '0', '-3')''')
+    cur.execute('''insert into AB5 values('nca2', '0', '0', '-2')''')
     cur.execute('''insert into AB5 values('nca3', '2', '0', '1')''')
     cur.execute('''insert into AB5 values('nca4', '-2', '0', '1')''')
     cur.execute('''insert into AB5 values('nca5', '0', '-3', '0')''')
@@ -202,8 +207,82 @@ def init_geometry_db():
     cur.execute('''insert into AB6 values('nca5', '-2', '0', '-2')''')
     cur.execute('''insert into AB6 values('nca6', '0', '-3', '0')''')
 
+    # compounds with lp
+    cur.execute('''create table AB2L(
+                        atom text,
+                        x text,
+                        y text,
+                        z text)
+                        ''')
+    cur.execute('''insert into AB2L values('nca1', '-0.8', '-0.1', '0')''')
+    cur.execute('''insert into AB2L values('nca2', '0.8', '-0.1', '0')''')
+
+    cur.execute('''create table AB3L( 
+                        atom text,
+                        x text,
+                        y text, 
+                        z text)
+                        ''')
+    cur.execute('''insert into AB3L values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB3L values('nca2', '0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB3L values('nca4', '0', '1', '-0.5')''')
+
+    cur.execute('''create table AB4L( 
+                           atom text,
+                           x text,
+                           y text, 
+                           z text)
+                           ''')
+    cur.execute('''insert into AB4L values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB4L values('nca3', '2', '0', '-1')''')
+    cur.execute('''insert into AB4L values('nca4', '-2', '0', '-1')''')
+    cur.execute('''insert into AB4L values('nca5', '0', '-3', '0')''')
+
+    cur.execute('''create table AB5L( 
+                               atom text,
+                               x text,
+                               y text, 
+                               z text)
+                               ''')
+    cur.execute('''insert into AB5L values('nca1', '0', '3', '0.5')''')
+    cur.execute('''insert into AB5L values('nca2', '2', '0', '2.5')''')
+    cur.execute('''insert into AB5L values('nca3', '-2', '0', '2')''')
+    cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
+    cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
+
+    # compounds with 2 lp
+    cur.execute('''create table AB2L2(
+                                 atom text,
+                                 x text,
+                                 y text,
+                                 z text)
+                                 ''')
+    cur.execute('''insert into AB2L2 values('nca1', '-0.4', '-0.5', '-0.5')''')
+    cur.execute('''insert into AB2L2 values('nca2', '0.4', '-0.5', '-0.5')''')
+
+    cur.execute('''create table AB3L2(
+                                atom text,
+                                x text,
+                                y text,
+                                z text)
+                                ''')
+    cur.execute('''insert into AB3L2 values('nca2', '0', '0', '-2')''')
+    cur.execute('''insert into AB3L2 values('nca3', '2', '0', '1')''')
+    cur.execute('''insert into AB3L2 values('nca4', '-2', '0', '1')''')
+
+    cur.execute('''create table AB4L2(
+                                    atom text,
+                                    x text,
+                                    y text,
+                                    z text)
+                                    ''')
+    cur.execute('''insert into AB4L2 values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB4L2 values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB4L2 values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB4L2 values('nca6', '0', '-3', '0')''')
+
     conn.commit()
-    conn.close() #
+    conn.close()
 
 
 def run_builtin_cmd(cmd_argv):
@@ -382,6 +461,11 @@ def get_elements(chem_form):
 
     return element_dict
 
+# ClO IS A BUG
+# CL2O IS A BUG
+# NO IS A BUG
+# CLF3 IS A BUG
+# ADD HALOGENS, ETC... TO oxidn_states
 def validate(chem_form):
     """
     Checks if
@@ -570,25 +654,41 @@ def fetch_coordinates(geometry):
 
     return x, y, z
 
-def render(input_geometry):
+# is text required??
+def render(input_geometry, element_dict):
     """
         Fetches the information from the `geometry` database using the input_geometry parameter.
         Renders the input compound in 3-dimensional space using matplotlib.
     """
-
+    pt = PeriodicTable()
     x, y, z = fetch_coordinates(input_geometry)
+
+    ca, nca = '', ''
+    element_list = []
+    for ele in element_dict:
+        element_list.append(ele)
+    for ele in element_dict:
+        # print(ele)
+        if element_dict[ele] == 1:
+            ca = ele
+            element_list.remove(ca)
+    else:
+        nca = element_list[0]
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-
+    ax.set_axis_off()
+    # print('heyy')
     # plotting ca, nca atoms
-    ax.plot(x, y, z, 'o')
-    ax.plot(0, 0, 0, 'o')
+    ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
+    # print('heyyy')
+    ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
 
     # plotting bonds
     for i in range(len(x)):
-        # print(x, y, z, sep ='\t')
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-o', color='b')
-
+        # ax.text(x[i], y[i], z[i], nca, size=15, color='b')
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c='g', alpha=0.75)
+    # ax.text(0, 0, 0, ca, size=13, color='r')
     plt.show()
 
 
