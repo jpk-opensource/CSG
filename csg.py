@@ -23,11 +23,40 @@ from core import main
 from ui import ui_main
 from sys import argv
 
+VERSION = "v0.1-alpha"
+
 def start_csg():
     if "--cli" in argv:
         main()
+
+    elif "--help" in argv or "-h" in argv:
+        usage()
+
+    elif "--version" in argv or "-V" in argv:
+        version()
+
     else:
+        if len(argv) > 1:
+            print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
+
         ui_main()
+
+def usage():
+    print(f"Usage: {argv[0]} [OPTION]")
+    print("\tGenerate simple chemical structures.\n")
+
+    print("Options:")
+    print("\t{:<21}{:<20}".format("--cli", "Run in the terminal"))
+    print("\t{:<15}{:<6}{:<20}".format("--help,", "-h", "Show this help message and exit"))
+    print("\t{:<15}{:<6}{:<20}".format("--version,", "-V", "Show version information and exit"))
+
+def version():
+    print(f"""\
+CSG {VERSION}
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.\
+""")
 
 
 if __name__ == "__main__":

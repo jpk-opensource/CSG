@@ -9,6 +9,16 @@ A simple Chemical Structure Generator.
 - PyQt5 (>= v5.15.0)
 - Matplotlib (>= v3.3.1)
 
+## Usage
+```
+Usage: csg.py [OPTION]
+    Generate simple chemical structures.
+
+Options:
+    --cli           Run in the terminal
+    --help,   -h    Show this help message and exit
+    --version -V    Show version information and exit
+```
 ## License
 Copyright © 2020 Jithin Renji, Kannan MD, Pranav Pujar
 

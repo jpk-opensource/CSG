@@ -95,10 +95,10 @@ def main():
         if valid:
             element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)
-            print(element_dict)
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry",
                                           classify_geometry(element_dict, lp)))
+            render(classify_geometry(element_dict, lp), element_dict)
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
@@ -350,9 +350,9 @@ def history(args):
 def csg_help(args):
     if len(args) == 0:
         print("Valid commands:")
-        print("\t{:<20} : {:<20}".format("/history, /hist", "Print command history"))
-        print("\t{:<20} : {:<20}".format("/exit, /quit", "Exit CSG"))
-        print("\t{:<20} : {:<20}".format("/help", "Display this help message"))
+        print("\t{:<20}{:<20}".format("/history, /hist", "Print command history"))
+        print("\t{:<20}{:<20}".format("/exit, /quit", "Exit CSG"))
+        print("\t{:<20}{:<20}".format("/help", "Display this help message"))
 
     for arg in args:
         if arg == "/help":
