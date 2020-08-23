@@ -30,25 +30,26 @@ def start_csg():
 
     elif "--help" in argv or "-h" in argv:
         usage()
+        exit()
 
     elif "--version" in argv or "-V" in argv:
         version()
+        exit()
 
-    else:
-        try:
-            from ui import ui_main
+    try:
+        from ui import ui_main
 
-            if len(argv) > 1:
-                print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
+        if len(argv) > 1:
+            print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
 
-            ui_main()
+        ui_main()
 
-        except ModuleNotFoundError:
-            print("[!] PyQt5 needs to be installed to run the graphical front-end.")
-            print(f"""[!] Try running '{argv[0]} --cli' to run CSG from the command-line
+    except ModuleNotFoundError:
+        print("[!] PyQt5 needs to be installed to run the graphical front-end.")
+        print(f"""[!] Try running '{argv[0]} --cli' to run CSG from the command-line
     or install PyQt5 by running 'pip install pyqt5'""")
 
-            exit()
+        exit()
 
 
 def usage():
