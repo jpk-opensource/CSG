@@ -518,7 +518,7 @@ def validate(chem_form):
     return net_charge_zero
 
 
-def get_compound_stats(element_dict) -> Stats:
+def get_compound_stats(element_dict):
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
