@@ -19,14 +19,13 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from core import main
-from ui import ui_main
 from sys import argv
 
 VERSION = "v0.1-alpha"
 
 def start_csg():
     if "--cli" in argv:
+        from core import main
         main()
 
     elif "--help" in argv or "-h" in argv:
@@ -36,10 +35,21 @@ def start_csg():
         version()
 
     else:
-        if len(argv) > 1:
-            print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
+        try:
+            from ui import ui_main
 
-        ui_main()
+            if len(argv) > 1:
+                print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
+
+            ui_main()
+
+        except ModuleNotFoundError:
+            print("[!] PyQt5 needs to be installed to run the graphical front-end.")
+            print(f"""[!] Try running '{argv[0]} --cli' to run CSG from the command-line
+    or install PyQt5 by running 'pip install pyqt5'""")
+
+            exit()
+
 
 def usage():
     print(f"Usage: {argv[0]} [OPTION]")
