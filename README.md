@@ -6,7 +6,7 @@ A simple Chemical Structure Generator.
 
 ## Requirements
 - Python 3 (>= v3.8)
-- PyQt5 (>= v5.15.0)
+- PyQt5 (optional; >= v5.15.0 required for graphical front-end)
 - Matplotlib (>= v3.3.1)
 
 ## Usage
