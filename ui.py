@@ -106,8 +106,6 @@ class Home(QWidget):
     def go_btn_clicked(self):
         is_valid = validate(self.formula_field.text())
         if is_valid:
-            # msg = QMessageBox.information(self, "Valid", "Nice!",
-            #                               QMessageBox.Ok)
             chem_form = self.formula_field.text()
             element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)

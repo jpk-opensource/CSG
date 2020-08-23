@@ -95,10 +95,12 @@ def main():
         if valid:
             element_dict = get_elements(chem_form)
             lp = get_lp(element_dict)
+            geometry = classify_geometry(element_dict, lp)
+
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
-            print("{:<10} : {:<6}".format("Geometry",
-                                          classify_geometry(element_dict, lp)))
-            render(classify_geometry(element_dict, lp), element_dict)
+            print("{:<10} : {:<6}".format("Geometry", geometry))
+
+            render(geometry, element_dict)
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
