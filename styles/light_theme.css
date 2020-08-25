@@ -8,6 +8,13 @@ QLineEdit, QListWidget {
     color: black;
 }
 
+QLineEdit:focus {
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: gray;
+    border-style: solid;
+}
+
 QMenu::item {
     background-color: rgb(250, 250, 250);
 }

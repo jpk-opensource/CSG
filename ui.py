@@ -146,12 +146,18 @@ class Home(QWidget):
     def formula_field_text_changed(self):
         is_valid = validate(self.formula_field.text())
         if is_valid:
-            self.formula_field.setStyleSheet("border: 1px solid green;")
+            self.formula_field.setStyleSheet("""
+                border: 1px solid green;
+                border-radius: 3px;
+            """)
             self.go_btn.setText("Go!")
             self.go_btn.setEnabled(True)
 
         else:
-            self.formula_field.setStyleSheet("border: 1px solid red;")
+            self.formula_field.setStyleSheet("""
+                border: 1px solid red;
+                border-radius: 3px;
+            """)
             self.go_btn.setText("Invalid!")
             self.go_btn.setDisabled(True)
 
