@@ -3,7 +3,7 @@ QWidget {
     color: white;
 }
 
-QLineEdit, QListWidget {
+QLineEdit {
     background-color: rgb(30, 30, 30);
     color: white;
 }
@@ -15,10 +15,52 @@ QLineEdit:focus {
     border-style: solid;
 }
 
+QListWidget {
+    background-color: rgb(30, 30, 30);
+    color: white;
+    border-color: rgb(20, 20, 20);
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+}
+
+QListWidget::item:hover {
+    background-color: rgb(40, 40, 40);
+}
+
+QListWidget::item:selected {
+    background-color: rgb(0, 138, 202);
+}
+
 QMenu::item {
-    background-color: rgb(100, 100, 100);
+    background-color: rgb(68, 68, 68);
 }
 
 QMenu::item:selected {
     background-color: rgb(0, 132, 255);
+}
+
+QScrollBar:vertical {
+    border: none;
+    border-radius: 4px;
+    background: rgb(30, 30, 30);
+    width: 6px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgb(82, 82, 82);
+    border-radius: 3px;
+}
+
+QScrollBar::handle:hover {
+    background: rgb(140, 140, 140);
+}
+
+QScrollBar::add-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+    height: 0px;
 }

@@ -47,11 +47,6 @@ class StackHolder(QWidget):
 
         # Populate the menubar
         menubar = QMenuBar()
-        fmenu_actions = menubar.addMenu("File")
-        actions = ["Open", "Save"]
-        for action in actions:
-            fmenu_actions.addAction(action)
-
         emenu_actions = menubar.addMenu("Edit")
         pref_action = emenu_actions.addAction("Preferences")
         pref_action.triggered.connect(self.set_preferences)
