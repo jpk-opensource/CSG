@@ -32,6 +32,58 @@ DARK_STYLESHEET = ""
 LIGHT_STYLESHEET = ""
 STYLESHEET = ""
 
+
+class StackHolder(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle(DEFAULT_TITLE)
+        self.setStyleSheet(STYLESHEET)
+
+        layout = QVBoxLayout()
+        back_btn_layout = QHBoxLayout()
+        self.stackw = QStackedWidget()
+        self.stackw.addWidget(Home())
+        self.stackw.addWidget(PreferencesPage(self, self.stackw))
+
+        # Populate the menubar
+        menubar = QMenuBar()
+        fmenu_actions = menubar.addMenu("File")
+        actions = ["Open", "Save"]
+        for action in actions:
+            fmenu_actions.addAction(action)
+
+        emenu_actions = menubar.addMenu("Edit")
+        pref_action = emenu_actions.addAction("Preferences")
+        pref_action.triggered.connect(self.set_preferences)
+
+        self.back_btn = QPushButton("< Back")
+        self.back_btn.clicked.connect(self.go_back)
+        self.back_btn.hide()
+
+        layout.addWidget(menubar)
+
+        back_btn_layout.addWidget(self.back_btn)
+        back_btn_layout.addStretch(1)
+
+        layout.addLayout(back_btn_layout)
+        layout.addWidget(self.stackw)
+        self.setLayout(layout)
+
+        self.show()
+
+    def set_preferences(self):
+        self.back_btn.show()
+        self.setWindowTitle("CSG: Preferences")
+        i = self.stackw.currentIndex()
+        if i == 0:
+            self.stackw.setCurrentIndex(1)
+
+    def go_back(self):
+        self.stackw.setCurrentIndex(0)
+        self.setWindowTitle(DEFAULT_TITLE)
+        self.back_btn.hide()
+
+
 class Home(QWidget):
     def __init__(self):
         super().__init__()
@@ -114,7 +166,7 @@ class Home(QWidget):
             render(geometry_str, element_dict)
 
 class PreferencesPage(QWidget):
-    def __init__(self, stackh, stackw):
+    def __init__(self, stackh: StackHolder, stackw: QStackedWidget):
         super().__init__()
         layout = QVBoxLayout()
         self.stackh = stackh
@@ -166,55 +218,6 @@ class PreferencesPage(QWidget):
         STYLESHEET = LIGHT_STYLESHEET
         self.stackh.setStyleSheet(STYLESHEET)
 
-class StackHolder(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle(DEFAULT_TITLE)
-        self.setStyleSheet(STYLESHEET)
-
-        layout = QVBoxLayout()
-        back_btn_layout = QHBoxLayout()
-        self.stackw = QStackedWidget()
-        self.stackw.addWidget(Home())
-        self.stackw.addWidget(PreferencesPage(self, self.stackw))
-
-        # Populate the menubar
-        menubar = QMenuBar()
-        fmenu_actions = menubar.addMenu("File")
-        actions = ["Open", "Save"]
-        for action in actions:
-            fmenu_actions.addAction(action)
-
-        emenu_actions = menubar.addMenu("Edit")
-        pref_action = emenu_actions.addAction("Preferences")
-        pref_action.triggered.connect(self.set_preferences)
-
-        self.back_btn = QPushButton("< Back")
-        self.back_btn.clicked.connect(self.go_back)
-        self.back_btn.hide()
-
-        layout.addWidget(menubar)
-
-        back_btn_layout.addWidget(self.back_btn)
-        back_btn_layout.addStretch(1)
-
-        layout.addLayout(back_btn_layout)
-        layout.addWidget(self.stackw)
-        self.setLayout(layout)
-
-        self.show()
-
-    def set_preferences(self):
-        self.back_btn.show()
-        self.setWindowTitle("CSG: Preferences")
-        i = self.stackw.currentIndex()
-        if i == 0:
-            self.stackw.setCurrentIndex(1)
-
-    def go_back(self):
-        self.stackw.setCurrentIndex(0)
-        self.setWindowTitle(DEFAULT_TITLE)
-        self.back_btn.hide()
 
 def ui_main():
     global STYLESHEET
@@ -266,6 +269,7 @@ def ui_main():
     conn.close()
     w.show()
     app.exec_()
+
 
 if __name__ == "__main__":
     ui_main()

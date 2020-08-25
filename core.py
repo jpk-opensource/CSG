@@ -287,7 +287,7 @@ def init_geometry_db():
     conn.close()
 
 
-def run_builtin_cmd(cmd_argv):
+def run_builtin_cmd(cmd_argv: list):
     """
     run_builtin_cmd():
         Pretty self-explanatory. Runs builtin commands, if it is recognized.
@@ -308,7 +308,8 @@ def run_builtin_cmd(cmd_argv):
         print(f"Invalid command: '{cmd_argv[0]}'")
         print("Try '/help' for more information.")
 
-def history(args):
+
+def history(args: list):
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
 
@@ -349,7 +350,8 @@ def history(args):
 
     conn.close()
 
-def csg_help(args):
+
+def csg_help(args: list):
     if len(args) == 0:
         print("Valid commands:")
         print("\t{:<20}{:<20}".format("/history, /hist", "Print command history"))
@@ -389,7 +391,7 @@ def csg_help(args):
             return
 
 
-def get_elements(chem_form):
+def get_elements(chem_form: str) -> dict:
     """
     get_elements():
         Returns a dictionary of elements, with the corresponding number
@@ -468,7 +470,7 @@ def get_elements(chem_form):
 # NO IS A BUG
 # CLF3 IS A BUG
 # ADD HALOGENS, ETC... TO oxidn_states
-def validate(chem_form):
+def validate(chem_form: str) -> bool:
     """
     Checks if
         (a) Input chemical has only 2 elements
@@ -518,7 +520,7 @@ def validate(chem_form):
     return net_charge_zero
 
 
-def get_compound_stats(element_dict):
+def get_compound_stats(element_dict: dict) -> Stats:
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
@@ -555,7 +557,7 @@ def get_compound_stats(element_dict):
 
     return stats
 
-def get_lp(element_dict):
+def get_lp(element_dict: dict) -> float:
     """
     get_lp():
         Return the number of lone pairs in a given compound.
@@ -575,7 +577,7 @@ def get_lp(element_dict):
 
     return lp
 
-def gdict_to_str(geometry_dict):
+def gdict_to_str(geometry_dict: dict) -> str:
     """
     gdict_to_str():
         Helper function for classify_geometry().
@@ -601,7 +603,7 @@ def gdict_to_str(geometry_dict):
 
     return geometry_str
 
-def classify_geometry(element_dict, lp):
+def classify_geometry(element_dict: dict, lp: float):
     """
     classify_geometry():
         Classifies the geometry of a given compound, given
@@ -622,7 +624,7 @@ def classify_geometry(element_dict, lp):
     return gdict_to_str(geometry)
 
 
-def fetch_coordinates(geometry):
+def fetch_coordinates(geometry: str) -> tuple:
     """
         Initializing the geometry database if does not exist.
         To be used for fetching coordinates and rendering.
@@ -649,7 +651,7 @@ def fetch_coordinates(geometry):
     return x, y, z
 
 # Is text required??
-def render(input_geometry, element_dict):
+def render(input_geometry: str, element_dict: dict) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
