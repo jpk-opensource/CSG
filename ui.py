@@ -104,11 +104,16 @@ class Home(QWidget):
         self.formula_field.textChanged.connect(self.formula_field_text_changed)
 
         self.go_btn = QPushButton("Go!")
+        self.go_btn.setFixedHeight(25)
         self.go_btn.setStyleSheet("""
             :enabled {
-                background-color: rgb(0, 173, 0);
+                background-color: rgb(0, 220, 0);
+                border-radius: 5px;
             } :disabled {
-                background-color: rgb(173, 0, 0);
+                color: gray;
+                background-color: rgb(30, 30, 30);
+                border: none;
+                border-radius: 5px;
             }""")
         self.go_btn.clicked.connect(self.go_btn_clicked)
         self.go_btn.setDisabled(True)
@@ -153,7 +158,6 @@ class Home(QWidget):
                 border: 1px solid red;
                 border-radius: 3px;
             """)
-            self.go_btn.setText("Invalid!")
             self.go_btn.setDisabled(True)
 
     def go_btn_clicked(self):
