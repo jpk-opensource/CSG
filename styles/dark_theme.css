@@ -64,3 +64,30 @@ QScrollBar::add-line:vertical {
 QScrollBar::sub-line:vertical {
     height: 0px;
 }
+
+QPushButton {
+    color: white;
+    background-color: rgb(46, 46, 46);
+    border: none;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: rgb(65, 65, 65)
+}
+
+QPushButton#go_btn:enabled {
+    background-color: rgb(0, 200, 0);
+    border-radius: 5px;
+}
+
+QPushButton#go_btn:enabled:hover {
+    background-color: rgb(0, 240, 0)
+}
+
+QPushButton#go_btn:disabled {
+    color: gray;
+    background-color: rgb(30, 30, 30);
+    border: none;
+    border-radius: 5px;
+}

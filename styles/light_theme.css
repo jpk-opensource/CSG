@@ -16,7 +16,7 @@ QLineEdit:focus {
 }
 
 QListWidget {
-    background-color: rgb(230, 230, 230);
+    background-color: rgb(218, 218, 218);
     color: black;
     border-color: rgb(201, 201, 201);
     border-style: solid;
@@ -62,4 +62,30 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
     height: 0px;
+}
+
+QPushButton {
+    color: black;
+    background-color: white;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+QPushButton#go_btn:enabled {
+    background-color: rgb(0, 245, 0);
+    border-radius: 5px;
+}
+
+QPushButton#go_btn:enabled:hover {
+    background-color: rgb(0, 235, 0);
+}
+
+QPushButton#go_btn:disabled {
+    color: gray;
+    background-color: rgb(200, 200, 200);
+    border: none;
+    border-radius: 5px;
 }

@@ -52,6 +52,8 @@ class StackHolder(QWidget):
         pref_action.triggered.connect(self.set_preferences)
 
         self.back_btn = QPushButton("< Back")
+        self.back_btn.setFixedSize(70, 30)
+        self.back_btn.setCursor(Qt.PointingHandCursor)
         self.back_btn.clicked.connect(self.go_back)
         self.back_btn.hide()
 
@@ -87,7 +89,6 @@ class Home(QWidget):
         self.show()
 
     def init_UI(self):
-
         self.layout = QVBoxLayout()
         self.main_layout = QGridLayout()
         self.form_layout = QFormLayout()
@@ -101,20 +102,12 @@ class Home(QWidget):
         # The main CSG form
         self.chem_form_label = QLabel("Chemical Formula:")
         self.formula_field = QLineEdit()
+        self.formula_field.setFixedHeight(25)
         self.formula_field.textChanged.connect(self.formula_field_text_changed)
 
         self.go_btn = QPushButton("Go!")
+        self.go_btn.setObjectName("go_btn")
         self.go_btn.setFixedHeight(25)
-        self.go_btn.setStyleSheet("""
-            :enabled {
-                background-color: rgb(0, 220, 0);
-                border-radius: 5px;
-            } :disabled {
-                color: gray;
-                background-color: rgb(30, 30, 30);
-                border: none;
-                border-radius: 5px;
-            }""")
         self.go_btn.clicked.connect(self.go_btn_clicked)
         self.go_btn.setDisabled(True)
 
@@ -150,8 +143,8 @@ class Home(QWidget):
                 border: 1px solid green;
                 border-radius: 3px;
             """)
-            self.go_btn.setText("Go!")
             self.go_btn.setEnabled(True)
+            self.go_btn.setCursor(Qt.PointingHandCursor)
 
         else:
             self.formula_field.setStyleSheet("""
@@ -169,6 +162,7 @@ class Home(QWidget):
             geometry_str = classify_geometry(element_dict, lp)
 
             render(geometry_str, element_dict)
+
 
 class PreferencesPage(QWidget):
     def __init__(self, stackh: StackHolder, stackw: QStackedWidget):
