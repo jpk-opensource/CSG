@@ -707,35 +707,37 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     fig.patch.set_facecolor(facecolor)
 
     # Determine bond order
-    if nca == 'H':
+    if pt.get_nvalence_electrons(nca) == 1:
         bond_order = 1
     else:
         bond_order = 8 - pt.get_nvalence_electrons(nca)
 
     if bond_order == 1:
-        bond_params = {'dark': 'white', 'light': 'g', 'lw': 1}
+        bond_params = {'dark': 'white', 'light': 'g', 'lw': 1, 'bo': 'single'}
     elif bond_order == 2:
-        bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5}
+        bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5, 'bo': 'double'}
     else:
-        bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5}
+        bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5, 'bo': 'triple'}
 
     # Plotting bonds
     for i in range(len(x)):
         ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
 
     # For creation of legend
-    legend_elements = [
+    element_handles = [
         Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
         Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)
     ]
 
-    legend_bonds = [
-        Line2D([0], [0], color='w', label='single', markerfacecolor=bond_params[theme], markersize=15)
+    bond_handles = [
+        Line2D([0], [0], color=bond_params[theme], lw=bond_params['lw'], label=bond_params['bo'],
+               markerfacecolor=bond_params[theme], markersize=15)
     ]
 
-    plt.legend(handles=legend_elements, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
-    # plt.legend(handles=legend_bonds, title = 'Bond Order', loc=4, bbox_to_anchor=(0,0))
-
+    element_legend = plt.legend(handles=element_handles, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
+    plt.gca().add_artist(element_legend)  # adding `legend` artist to facilitate multiple legends on the same axes
+    plt.legend(handles=bond_handles, title='Bond Order', loc=4)
+    # plt.legend(handles=legend_bonds, title = 'Bond Order', loc=4)
     plt.show()
 
 
