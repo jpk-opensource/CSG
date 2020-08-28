@@ -252,6 +252,20 @@ def init_geometry_db():
     cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
     cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
 
+    # check ples
+    cur.execute('''create table AB6L(    
+                                    atom text,
+                                    x text,
+                                    y text,
+                                    z text)
+                                    ''')
+    cur.execute('''insert into AB6 values('nca1', '0', '3', '0')''')
+    cur.execute('''insert into AB6 values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB6 values('nca3', '-2', '0', '2')''')
+    cur.execute('''insert into AB6 values('nca4', '2', '0', '-2')''')
+    cur.execute('''insert into AB6 values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB6 values('nca6', '0', '-3', '0')''')
+
     # compounds with 2 lp
     cur.execute('''create table AB2L2(
                                  atom text,
@@ -650,7 +664,6 @@ def fetch_coordinates(geometry: str) -> tuple:
 
     return x, y, z
 
-# Is text required??
 def render(input_geometry: str, element_dict: dict) -> None:
     """
         Fetches the information from the `geometry` database using the
@@ -679,9 +692,38 @@ def render(input_geometry: str, element_dict: dict) -> None:
     ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
     ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
 
+    conn = sqlite3.connect('.db/csg_db.db')
+    cur = conn.cursor()
+    cur.execute('select theme from user_preferences')
+    theme = cur.fetchone()[0]
+    conn.close()
+
+    if theme == 'dark':
+        facecolor = '#171717'
+    else:
+        facecolor = '#E9E9E9'
+
+    ax.set_facecolor(facecolor)
+    fig.patch.set_facecolor(facecolor)
+
+    # Determine bond order
+    if nca == 'H':
+        bond_order = 1
+    else:
+        bond_order = 8 - pt.get_nvalence_electrons(nca)
+
+    if bond_order == 1:
+        bond_color = {'dark': 'white', 'light': 'g'}
+    elif bond_order == 2:
+        bond_color = {'dark': 'g', 'light': 'navy'}
+    else:
+        bond_color = {'dark': 'b', 'light': 'red'}
+
+    # print(nca, bond_color)
+
     # Plotting bonds
     for i in range(len(x)):
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c='g', alpha=0.75)
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c=bond_color[theme], alpha=0.75)
 
     plt.show()
 
