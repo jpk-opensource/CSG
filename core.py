@@ -34,8 +34,8 @@ oxidn_states = {
     'Be': [2],
     'B':  [3],
     'C':  [-4, 2, 4],
-    'N':  [-3, -2, 4],  # There are more ig. have to look into this
-    'O':  [-2, 2],  # Must include -0.5, which causes errors
+    'N':  [-3, -2, 4],
+    'O':  [-2, 2],
     'F':  [-1, 1],
     'Ne': [0],
     'Na': [1],
@@ -44,8 +44,7 @@ oxidn_states = {
     'Si': [4],
     'P':  [3, 5],
     'S':  [-2, 4, 6],
-    'Cl': [-1],  # Check this. I doubt other halogens other than F
-                 # have only one oxidation state
+    'Cl': [-1],
     'Ar': [0],
     'K':  [1],
     'Ca': [2],
@@ -507,7 +506,7 @@ def validate(chem_form: str) -> bool:
     net_charge_zero = False
 
     # Populating a list of input elements if they exist
-    # Transition metals wont properly be validated cos oxidn states is incomplete
+    # No validation of transition elements, as they do not exist in oxidn_states
     for el in element_dict:
         if not pt.check(el):
             return False
@@ -668,7 +667,7 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
-        space using matplotlib.
+        space using matplotlib, taking into account the user preferred theme and bond order.
     """
 
     x, y, z = fetch_coordinates(input_geometry)
@@ -698,6 +697,8 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     theme = cur.fetchone()[0]
     conn.close()
 
+    # Storing the hexadecimal color values as per user preference.
+    # To be used for background color while rendering in matplotlib
     if theme == 'dark':
         facecolor = '#171717'
     else:
@@ -706,7 +707,8 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     ax.set_facecolor(facecolor)
     fig.patch.set_facecolor(facecolor)
 
-    # Determine bond order
+    # Determining Bond Order and populating bond_params
+    # for use in plotting bonds and placing legends
     if pt.get_nvalence_electrons(nca) == 1:
         bond_order = 1
     else:
@@ -719,11 +721,11 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     else:
         bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5, 'bo': 'triple'}
 
-    # Plotting bonds
+    # Plotting Bonds
     for i in range(len(x)):
         ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
 
-    # For creation of legend
+    # Placing Legends
     element_handles = [
         Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
         Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)
@@ -735,7 +737,10 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     ]
 
     element_legend = plt.legend(handles=element_handles, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
-    plt.gca().add_artist(element_legend)  # adding `legend` artist to facilitate multiple legends on the same axes
+
+    # adding `legend` artist to facilitate multiple legends on the same axes
+    plt.gca().add_artist(element_legend)
+
     plt.legend(handles=bond_handles, title='Bond Order', loc=4, bbox_to_anchor=(1.12,0.987))
 
     plt.show()
