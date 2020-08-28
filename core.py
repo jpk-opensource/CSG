@@ -268,13 +268,13 @@ def init_geometry_db():
 
     # compounds with 2 lp
     cur.execute('''create table AB2L2(
-                                 atom text,
-                                 x text,
-                                 y text,
-                                 z text)
-                                 ''')
-    cur.execute('''insert into AB2L2 values('nca1', '-0.4', '-0.5', '-0.5')''')
-    cur.execute('''insert into AB2L2 values('nca2', '0.4', '-0.5', '-0.5')''')
+                                     atom text,
+                                     x text,
+                                     y text,
+                                     z text)
+                                     ''')
+    cur.execute('''insert into AB2L2 values('nca1', '-5', '-3', '-4')''')
+    cur.execute('''insert into AB2L2 values('nca2', '5', '-3', '-4')''')
 
     cur.execute('''create table AB3L2(
                                 atom text,
