@@ -34,9 +34,9 @@ oxidn_states = {
     'Be': [2],
     'B':  [3],
     'C':  [-4, 2, 4],
-    'N':  [-3, -2, 4],
+    'N':  [-2, 4, 3],
     'O':  [-2, 2],
-    'F':  [-1, 1],
+    'F':  [-1, 1, 3],
     'Ne': [0],
     'Na': [1],
     'Mg': [2],
@@ -44,7 +44,7 @@ oxidn_states = {
     'Si': [4],
     'P':  [3, 5],
     'S':  [-2, 4, 6],
-    'Cl': [-1],
+    'Cl': [-1, 3],
     'Ar': [0],
     'K':  [1],
     'Ca': [2],
@@ -478,11 +478,8 @@ def get_elements(chem_form: str) -> dict:
 
     return element_dict
 
-# ClO IS A BUG
-# CL2O IS A BUG
+
 # NO IS A BUG
-# CLF3 IS A BUG
-# ADD HALOGENS, ETC... TO oxidn_states
 def validate(chem_form: str) -> bool:
     """
     Checks if
