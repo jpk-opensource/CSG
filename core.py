@@ -101,7 +101,7 @@ def main():
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry", geometry))
 
-            render(geometry, element_dict)
+            render(geometry, element_dict, chem_form)
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
@@ -664,7 +664,7 @@ def fetch_coordinates(geometry: str) -> tuple:
 
     return x, y, z
 
-def render(input_geometry: str, element_dict: dict) -> None:
+def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
@@ -686,7 +686,7 @@ def render(input_geometry: str, element_dict: dict) -> None:
 
     nca = element_list[0]
 
-    fig = plt.figure()
+    fig = plt.figure(f'{chem_form} ({input_geometry} type)')
     ax = fig.add_subplot(111, projection='3d')
     ax.set_axis_off()
     ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
@@ -728,7 +728,7 @@ def render(input_geometry: str, element_dict: dict) -> None:
         Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
         Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)]
     plt.legend(handles=legend_elements, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
-
+    # plt.legend(title=f'Geometry: {input_geometry}')
     plt.show()
 
 
