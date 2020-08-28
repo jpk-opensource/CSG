@@ -24,6 +24,7 @@ import re
 from os import path, mkdir
 from chemistry import *
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 
 oxidn_states = {
@@ -721,6 +722,12 @@ def render(input_geometry: str, element_dict: dict) -> None:
     # Plotting bonds
     for i in range(len(x)):
         ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c=bond_color[theme], alpha=0.75)
+
+    # For creation of legend
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
+        Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)]
+    plt.legend(handles=legend_elements, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
 
     plt.show()
 
