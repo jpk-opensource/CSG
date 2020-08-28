@@ -161,7 +161,7 @@ class Home(QWidget):
             lp = get_lp(element_dict)
             geometry_str = classify_geometry(element_dict, lp)
 
-            render(geometry_str, element_dict)
+            render(geometry_str, element_dict, chem_form)
 
 
 class PreferencesPage(QWidget):

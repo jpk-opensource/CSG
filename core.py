@@ -713,22 +713,29 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
         bond_order = 8 - pt.get_nvalence_electrons(nca)
 
     if bond_order == 1:
-        bond_color = {'dark': 'white', 'light': 'g'}
+        bond_params = {'dark': 'white', 'light': 'g', 'lw': 1}
     elif bond_order == 2:
-        bond_color = {'dark': 'g', 'light': 'navy'}
+        bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5}
     else:
-        bond_color = {'dark': 'b', 'light': 'red'}
+        bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5}
 
     # Plotting bonds
     for i in range(len(x)):
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c=bond_color[theme], alpha=0.75)
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
 
     # For creation of legend
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
-        Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)]
+        Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)
+    ]
+
+    legend_bonds = [
+        Line2D([0], [0], color='w', label='single', markerfacecolor=bond_params[theme], markersize=15)
+    ]
+
     plt.legend(handles=legend_elements, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
-    # plt.legend(title=f'Geometry: {input_geometry}')
+    # plt.legend(handles=legend_bonds, title = 'Bond Order', loc=4, bbox_to_anchor=(0,0))
+
     plt.show()
 
 
