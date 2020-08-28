@@ -252,19 +252,18 @@ def init_geometry_db():
     cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
     cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
 
-    # check ples
     cur.execute('''create table AB6L(    
-                                    atom text,
-                                    x text,
-                                    y text,
-                                    z text)
-                                    ''')
-    cur.execute('''insert into AB6 values('nca1', '0', '3', '0')''')
-    cur.execute('''insert into AB6 values('nca2', '2', '0', '2')''')
-    cur.execute('''insert into AB6 values('nca3', '-2', '0', '2')''')
-    cur.execute('''insert into AB6 values('nca4', '2', '0', '-2')''')
-    cur.execute('''insert into AB6 values('nca5', '-2', '0', '-2')''')
-    cur.execute('''insert into AB6 values('nca6', '0', '-3', '0')''')
+                                        atom text,
+                                        x text,
+                                        y text,
+                                        z text)
+                                        ''')
+    cur.execute('''insert into AB6L values('nca1', '0', '3', '-1')''')
+    cur.execute('''insert into AB6L values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB6L values('nca3', '-2', '-1', '2')''')
+    cur.execute('''insert into AB6L values('nca4', '2', '0', '-2')''')
+    cur.execute('''insert into AB6L values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB6L values('nca6', '0', '-3', '0')''')
 
     # compounds with 2 lp
     cur.execute('''create table AB2L2(
@@ -718,8 +717,6 @@ def render(input_geometry: str, element_dict: dict) -> None:
         bond_color = {'dark': 'g', 'light': 'navy'}
     else:
         bond_color = {'dark': 'b', 'light': 'red'}
-
-    # print(nca, bond_color)
 
     # Plotting bonds
     for i in range(len(x)):
