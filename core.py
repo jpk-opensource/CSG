@@ -713,7 +713,7 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
         bond_order = 8 - pt.get_nvalence_electrons(nca)
 
     if bond_order == 1:
-        bond_params = {'dark': 'white', 'light': 'g', 'lw': 1, 'bo': 'single'}
+        bond_params = {'dark': 'royalblue', 'light': 'g', 'lw': 1, 'bo': 'single'}
     elif bond_order == 2:
         bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5, 'bo': 'double'}
     else:
@@ -736,8 +736,8 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
 
     element_legend = plt.legend(handles=element_handles, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
     plt.gca().add_artist(element_legend)  # adding `legend` artist to facilitate multiple legends on the same axes
-    plt.legend(handles=bond_handles, title='Bond Order', loc=4)
-    # plt.legend(handles=legend_bonds, title = 'Bond Order', loc=4)
+    plt.legend(handles=bond_handles, title='Bond Order', loc=4, bbox_to_anchor=(1.12,0.987))
+
     plt.show()
 
 
