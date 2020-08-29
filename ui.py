@@ -154,14 +154,10 @@ class Home(QWidget):
             self.go_btn.setDisabled(True)
 
     def go_btn_clicked(self):
-        is_valid = validate(self.formula_field.text())
+        chem_form = self.formula_field.text()
+        is_valid = validate(chem_form)
         if is_valid:
-            chem_form = self.formula_field.text()
-            element_dict = get_elements(chem_form)
-            lp = get_lp(element_dict)
-            geometry_str = classify_geometry(element_dict, lp)
-
-            render(geometry_str, element_dict, chem_form)
+            render(chem_form)
 
 
 class PreferencesPage(QWidget):

@@ -100,7 +100,7 @@ def main():
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry", geometry))
 
-            render(geometry, element_dict, chem_form)
+            render(chem_form)
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
@@ -660,14 +660,16 @@ def fetch_coordinates(geometry: str) -> tuple:
 
     return x, y, z
 
-def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
+def render(chem_form: str) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
         space using matplotlib, taking into account the user preferred theme and bond order.
     """
+    element_dict = get_elements(chem_form)
+    geometry = classify_geometry(element_dict, get_lp(element_dict))
 
-    x, y, z = fetch_coordinates(input_geometry)
+    x, y, z = fetch_coordinates(geometry)
 
     ca, nca = '', ''
     element_list = []
@@ -682,7 +684,7 @@ def render(input_geometry: str, element_dict: dict, chem_form: str) -> None:
 
     nca = element_list[0]
 
-    fig = plt.figure(f'{chem_form} ({input_geometry} type)')
+    fig = plt.figure(f'{chem_form} ({geometry} type)')
     ax = fig.add_subplot(111, projection='3d')
     ax.set_axis_off()
     ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
