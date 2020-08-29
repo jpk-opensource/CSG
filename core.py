@@ -24,6 +24,7 @@ import re
 from os import path, mkdir
 from chemistry import *
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 
 oxidn_states = {
@@ -33,9 +34,9 @@ oxidn_states = {
     'Be': [2],
     'B':  [3],
     'C':  [-4, 2, 4],
-    'N':  [-3, -2, 4],  # There are more ig. have to look into this
-    'O':  [-2, -1, 1, 2],  # Must include -0.5, which causes errors
-    'F':  [-1, 1],
+    'N':  [-2, 4, 3],
+    'O':  [-2, 2],
+    'F':  [-1, 1, 3],
     'Ne': [0],
     'Na': [1],
     'Mg': [2],
@@ -43,8 +44,7 @@ oxidn_states = {
     'Si': [4],
     'P':  [3, 5],
     'S':  [-2, 4, 6],
-    'Cl': [-1],  # Check this. I doubt other halogens other than F
-                 # have only one oxidation state
+    'Cl': [-1, 3],
     'Ar': [0],
     'K':  [1],
     'Ca': [2],
@@ -56,7 +56,7 @@ oxidn_states = {
 tick = '\u2713'
 
 
-def main():
+def main() -> None:
     print("CSG: Chemical Structure Generator v0.1")
     print("Type '/help' for help on command usage.\n")
 
@@ -100,14 +100,14 @@ def main():
             print("{:<10} : {:<6}".format("Lone Pairs", lp))
             print("{:<10} : {:<6}".format("Geometry", geometry))
 
-            render(geometry, element_dict)
+            render(chem_form)
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
 
     conn.close()
 
-def init_csg_db():
+def init_csg_db() -> None:
     """
     init_csg_db():
         Initialize the CSG database, if it does not exist. At the moment,
@@ -141,7 +141,7 @@ def init_csg_db():
 
     conn.close()
 
-def init_geometry_db():
+def init_geometry_db() -> None:
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
 
@@ -252,15 +252,28 @@ def init_geometry_db():
     cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
     cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
 
+    cur.execute('''create table AB6L(
+                                        atom text,
+                                        x text,
+                                        y text,
+                                        z text)
+                                        ''')
+    cur.execute('''insert into AB6L values('nca1', '0', '3', '-1')''')
+    cur.execute('''insert into AB6L values('nca2', '2', '0', '2')''')
+    cur.execute('''insert into AB6L values('nca3', '-2', '-1', '2')''')
+    cur.execute('''insert into AB6L values('nca4', '2', '0', '-2')''')
+    cur.execute('''insert into AB6L values('nca5', '-2', '0', '-2')''')
+    cur.execute('''insert into AB6L values('nca6', '0', '-3', '0')''')
+
     # compounds with 2 lp
     cur.execute('''create table AB2L2(
-                                 atom text,
-                                 x text,
-                                 y text,
-                                 z text)
-                                 ''')
-    cur.execute('''insert into AB2L2 values('nca1', '-0.4', '-0.5', '-0.5')''')
-    cur.execute('''insert into AB2L2 values('nca2', '0.4', '-0.5', '-0.5')''')
+                                     atom text,
+                                     x text,
+                                     y text,
+                                     z text)
+                                     ''')
+    cur.execute('''insert into AB2L2 values('nca1', '-5', '-3', '-4')''')
+    cur.execute('''insert into AB2L2 values('nca2', '5', '-3', '-4')''')
 
     cur.execute('''create table AB3L2(
                                 atom text,
@@ -287,7 +300,7 @@ def init_geometry_db():
     conn.close()
 
 
-def run_builtin_cmd(cmd_argv: list):
+def run_builtin_cmd(cmd_argv: list) -> None:
     """
     run_builtin_cmd():
         Pretty self-explanatory. Runs builtin commands, if it is recognized.
@@ -309,7 +322,7 @@ def run_builtin_cmd(cmd_argv: list):
         print("Try '/help' for more information.")
 
 
-def history(args: list):
+def history(args: list) -> None:
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
 
@@ -351,7 +364,7 @@ def history(args: list):
     conn.close()
 
 
-def csg_help(args: list):
+def csg_help(args: list) -> None:
     if len(args) == 0:
         print("Valid commands:")
         print("\t{:<20}{:<20}".format("/history, /hist", "Print command history"))
@@ -465,11 +478,8 @@ def get_elements(chem_form: str) -> dict:
 
     return element_dict
 
-# ClO IS A BUG
-# CL2O IS A BUG
+
 # NO IS A BUG
-# CLF3 IS A BUG
-# ADD HALOGENS, ETC... TO oxidn_states
 def validate(chem_form: str) -> bool:
     """
     Checks if
@@ -493,7 +503,7 @@ def validate(chem_form: str) -> bool:
     net_charge_zero = False
 
     # Populating a list of input elements if they exist
-    # Transition metals wont properly be validated cos oxidn states is incomplete
+    # No validation of transition elements, as they do not exist in oxidn_states
     for el in element_dict:
         if not pt.check(el):
             return False
@@ -650,15 +660,16 @@ def fetch_coordinates(geometry: str) -> tuple:
 
     return x, y, z
 
-# Is text required??
-def render(input_geometry: str, element_dict: dict) -> None:
+def render(chem_form: str) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
-        space using matplotlib.
+        space using matplotlib, taking into account the user preferred theme and bond order.
     """
+    element_dict = get_elements(chem_form)
+    geometry = classify_geometry(element_dict, get_lp(element_dict))
 
-    x, y, z = fetch_coordinates(input_geometry)
+    x, y, z = fetch_coordinates(geometry)
 
     ca, nca = '', ''
     element_list = []
@@ -673,15 +684,63 @@ def render(input_geometry: str, element_dict: dict) -> None:
 
     nca = element_list[0]
 
-    fig = plt.figure()
+    fig = plt.figure(f'{chem_form} ({geometry} type)')
     ax = fig.add_subplot(111, projection='3d')
     ax.set_axis_off()
     ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
     ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
 
-    # Plotting bonds
+    conn = sqlite3.connect('.db/csg_db.db')
+    cur = conn.cursor()
+    cur.execute('select theme from user_preferences')
+    theme = cur.fetchone()[0]
+    conn.close()
+
+    # Storing the hexadecimal color values as per user preference.
+    # To be used for background color while rendering in matplotlib
+    if theme == 'dark':
+        facecolor = '#171717'
+    else:
+        facecolor = '#E9E9E9'
+
+    ax.set_facecolor(facecolor)
+    fig.patch.set_facecolor(facecolor)
+
+    # Determining Bond Order and populating bond_params
+    # for use in plotting bonds and placing legends
+    if pt.get_nvalence_electrons(nca) == 1:
+        bond_order = 1
+    else:
+        bond_order = 8 - pt.get_nvalence_electrons(nca)
+
+    if bond_order == 1:
+        bond_params = {'dark': 'royalblue', 'light': 'g', 'lw': 1, 'bo': 'single'}
+    elif bond_order == 2:
+        bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5, 'bo': 'double'}
+    else:
+        bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5, 'bo': 'triple'}
+
+    # Plotting Bonds
     for i in range(len(x)):
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', c='g', alpha=0.75)
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
+
+    # Placing Legends
+    element_handles = [
+        Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
+        Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)
+    ]
+
+    bond_handles = [
+        Line2D([0], [0], color=bond_params[theme], lw=bond_params['lw'], label=bond_params['bo'],
+               markerfacecolor=bond_params[theme], markersize=15)
+    ]
+
+    element_legend = plt.legend(handles=element_handles, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
+
+    # adding `legend` artist to facilitate multiple legends on the same axes
+    plt.gca().add_artist(element_legend)
+
+    plt.legend(handles=bond_handles, title='Bond Order', loc=4, bbox_to_anchor=(1.12,0.987))
 
     plt.show()
 
