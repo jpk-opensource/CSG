@@ -111,6 +111,8 @@ class Home(QWidget):
         self.go_btn.clicked.connect(self.go_btn_clicked)
         self.go_btn.setDisabled(True)
 
+        self.formula_field.returnPressed.connect(self.go_btn_clicked)
+
         self.recents_list = QListWidget()
 
         init_csg_db()
