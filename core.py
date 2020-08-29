@@ -685,7 +685,7 @@ def render(chem_form: str) -> None:
 
     nca = element_list[0]
 
-    # Get rid of default toolbar
+    # Get rid of the default toolbar
     mpl.rcParams['toolbar'] = 'None'
 
     fig = plt.figure(f'{chem_form} ({geometry} type)')
