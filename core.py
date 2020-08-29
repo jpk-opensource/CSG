@@ -56,7 +56,7 @@ oxidn_states = {
 tick = '\u2713'
 
 
-def main():
+def main() -> None:
     print("CSG: Chemical Structure Generator v0.1")
     print("Type '/help' for help on command usage.\n")
 
@@ -107,7 +107,7 @@ def main():
 
     conn.close()
 
-def init_csg_db():
+def init_csg_db() -> None:
     """
     init_csg_db():
         Initialize the CSG database, if it does not exist. At the moment,
@@ -141,7 +141,7 @@ def init_csg_db():
 
     conn.close()
 
-def init_geometry_db():
+def init_geometry_db() -> None:
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
 
@@ -252,7 +252,7 @@ def init_geometry_db():
     cur.execute('''insert into AB5L values('nca5', '-2', '0', '-2.5')''')
     cur.execute('''insert into AB5L values('nca6', '0', '-3', '0.5')''')
 
-    cur.execute('''create table AB6L(    
+    cur.execute('''create table AB6L(
                                         atom text,
                                         x text,
                                         y text,
@@ -300,7 +300,7 @@ def init_geometry_db():
     conn.close()
 
 
-def run_builtin_cmd(cmd_argv: list):
+def run_builtin_cmd(cmd_argv: list) -> None:
     """
     run_builtin_cmd():
         Pretty self-explanatory. Runs builtin commands, if it is recognized.
@@ -322,7 +322,7 @@ def run_builtin_cmd(cmd_argv: list):
         print("Try '/help' for more information.")
 
 
-def history(args: list):
+def history(args: list) -> None:
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
 
@@ -364,7 +364,7 @@ def history(args: list):
     conn.close()
 
 
-def csg_help(args: list):
+def csg_help(args: list) -> None:
     if len(args) == 0:
         print("Valid commands:")
         print("\t{:<20}{:<20}".format("/history, /hist", "Print command history"))
