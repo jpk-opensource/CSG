@@ -23,6 +23,7 @@ import sqlite3
 import re
 from os import path, mkdir
 from chemistry import *
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
@@ -683,6 +684,8 @@ def render(chem_form: str) -> None:
             break
 
     nca = element_list[0]
+
+    mpl.rcParams['toolbar'] = 'None'
 
     fig = plt.figure(f'{chem_form} ({geometry} type)')
     ax = fig.add_subplot(111, projection='3d')
