@@ -21,10 +21,6 @@
 
 class PeriodicTable:
     def __init__(self):
-        #
-        #       PLEASE DO NOT MESS WITH THE ALIGNMENT
-        #       This comment will be removed in a later commit
-        #
         self.__groups = {
             1:  {'H':  1, 'Li': 3,  'Na': 11, 'K':  19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
             2:  {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},

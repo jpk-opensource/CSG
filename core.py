@@ -541,7 +541,9 @@ def get_compound_stats(element_dict: dict) -> Stats:
     # Central atom subscript
     ca_sub = 1
 
+    # The least subscript among all
     min_sub = min(subscripts)
+
     if subscripts.count(min_sub) == 1:
         i = subscripts.index(min_sub)
         ca = elements[i]
@@ -568,6 +570,7 @@ def get_compound_stats(element_dict: dict) -> Stats:
 
     return stats
 
+
 def get_lp(element_dict: dict) -> float:
     """
     get_lp():
@@ -587,6 +590,7 @@ def get_lp(element_dict: dict) -> float:
     lp = (lp - bp) / 2
 
     return lp
+
 
 def gdict_to_str(geometry_dict: dict) -> str:
     """
@@ -613,6 +617,7 @@ def gdict_to_str(geometry_dict: dict) -> str:
             geometry_str += el
 
     return geometry_str
+
 
 def classify_geometry(element_dict: dict, lp: float):
     """
@@ -661,11 +666,13 @@ def fetch_coordinates(geometry: str) -> tuple:
 
     return x, y, z
 
+
 def render(chem_form: str) -> None:
     """
         Fetches the information from the `geometry` database using the
         input_geometry parameter. Renders the input compound in 3-dimensional
-        space using matplotlib, taking into account the user preferred theme and bond order.
+        space using matplotlib, taking into account the user preferred theme
+        and bond order.
     """
     element_dict = get_elements(chem_form)
     geometry = classify_geometry(element_dict, get_lp(element_dict))
@@ -726,25 +733,32 @@ def render(chem_form: str) -> None:
 
     # Plotting Bonds
     for i in range(len(x)):
-        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-', linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
+        ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-',
+                linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
 
     # Placing Legends
     element_handles = [
-        Line2D([0], [0], marker='o', color='w', label=nca, markerfacecolor=pt.get_markercolor(nca), markersize=15),
-        Line2D([0], [0], marker='o', color='w', label=ca, markerfacecolor=pt.get_markercolor(ca), markersize=15)
+        Line2D([0], [0], marker='o', color='w', label=nca,
+               markerfacecolor=pt.get_markercolor(nca), markersize=15),
+
+        Line2D([0], [0], marker='o', color='w', label=ca,
+               markerfacecolor=pt.get_markercolor(ca), markersize=15)
     ]
 
     bond_handles = [
-        Line2D([0], [0], color=bond_params[theme], lw=bond_params['lw'], label=bond_params['bo'],
-               markerfacecolor=bond_params[theme], markersize=15)
+        Line2D([0], [0], color=bond_params[theme], lw=bond_params['lw'],
+               label=bond_params['bo'], markerfacecolor=bond_params[theme],
+               markersize=15)
     ]
 
-    element_legend = plt.legend(handles=element_handles, title='Legend', loc=1, bbox_to_anchor=(1.3, 1.15))
+    element_legend = plt.legend(handles=element_handles, title='Legend', loc=1,
+                                bbox_to_anchor=(1.3, 1.15))
 
-    # adding `legend` artist to facilitate multiple legends on the same axes
+    # Adding `legend` artist to facilitate multiple legends on the same axes
     plt.gca().add_artist(element_legend)
 
-    plt.legend(handles=bond_handles, title='Bond Order', loc=4, bbox_to_anchor=(1.12,0.987))
+    plt.legend(handles=bond_handles, title='Bond Order', loc=4,
+               bbox_to_anchor=(1.12,0.987))
 
     plt.show()
 
