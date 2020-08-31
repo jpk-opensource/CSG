@@ -23,6 +23,7 @@ from sys import argv
 
 VERSION = "v0.1-alpha"
 
+
 def start_csg():
     if "--cli" in argv:
         from core import main
@@ -60,6 +61,7 @@ def usage():
     print("\t{:<21}{:<20}".format("--cli", "Run in the terminal"))
     print("\t{:<15}{:<6}{:<20}".format("--help,", "-h", "Show this help message and exit"))
     print("\t{:<15}{:<6}{:<20}".format("--version,", "-V", "Show version information and exit"))
+
 
 def version():
     print(f"""\

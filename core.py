@@ -108,6 +108,7 @@ def main() -> None:
 
     conn.close()
 
+
 def init_csg_db() -> None:
     """
     init_csg_db():
@@ -141,6 +142,7 @@ def init_csg_db() -> None:
             raise
 
     conn.close()
+
 
 def init_geometry_db() -> None:
     conn = sqlite3.connect('.db/geometry.db')
@@ -337,7 +339,7 @@ def history(args: list) -> None:
             cur.execute("DELETE FROM history;")
             cur.execute("DELETE FROM sqlite_sequence WHERE name='history';")
             conn.commit()
-            print (f"[{tick}] Done!")
+            print(f"[{tick}] Done!")
 
         elif args[0] == "select":
             if len(args) != 2:
@@ -392,7 +394,7 @@ def csg_help(args: list) -> None:
 
             print("Examples\n" +
                   "\t/history\n" +
-                  "\t/history clear\n"+
+                  "\t/history clear\n" +
                   "\t/history select builtin")
 
         elif arg in ("/exit", "/quit"):
@@ -415,7 +417,7 @@ def get_elements(chem_form: str) -> dict:
         get_elements("H2O") returns {"H": 2, "O": 1}
     """
 
-    if chem_form == None:
+    if chem_form is None:
         return
 
     chem_form = chem_form.strip()
@@ -423,7 +425,7 @@ def get_elements(chem_form: str) -> dict:
     # Formula should be of the form:
     #     <Element 1>[Subscript]<Element2>[Subscript]
     re_match = re.match("^([A-Z][a-z]?\d*){2}", chem_form)
-    if re_match == None or re_match.group() != chem_form:
+    if re_match is None or re_match.group() != chem_form:
         return
 
     # This stores the final elements dictionary.
@@ -721,7 +723,7 @@ def render(chem_form: str) -> None:
     # Plotting Bonds
     for i in range(len(x)):
         ax.plot([0, x[i]], [0, y[i]], [0, z[i]], '-',
-                linewidth=bond_params['lw'],c=bond_params[theme], alpha=0.75)
+                linewidth=bond_params['lw'], c=bond_params[theme], alpha=0.75)
 
     # Placing Legends
     element_handles = [
@@ -745,7 +747,7 @@ def render(chem_form: str) -> None:
     plt.gca().add_artist(element_legend)
 
     plt.legend(handles=bond_handles, title='Bond Order', loc=4,
-               bbox_to_anchor=(1.12,0.987))
+               bbox_to_anchor=(1.12, 0.987))
 
     plt.show()
 

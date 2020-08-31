@@ -230,7 +230,7 @@ def ui_main():
         DARK_STYLESHEET = dark_theme.read()
 
     conn = sqlite3.connect(".db/csg_db.db")
-    cur  = conn.cursor()
+    cur = conn.cursor()
 
     app = QApplication(argv)
 
