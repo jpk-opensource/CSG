@@ -549,6 +549,7 @@ def get_compound_stats(element_dict: dict) -> Stats:
         ca = elements[i]
         ca_sub = subscripts[i]
 
+    # If there is no obvious central atom, pick the first one.
     if ca == "":
         ca = elements[0]
         ca_sub = subscripts[0]
@@ -592,18 +593,25 @@ def get_lp(element_dict: dict) -> float:
     return lp
 
 
-def gdict_to_str(geometry_dict: dict) -> str:
+def classify_geometry(element_dict: dict, lp: float) -> str:
     """
-    gdict_to_str():
-        Helper function for classify_geometry().
-        Coverts a geometry dictionary to string.
-
-    Example:
-        gdict_to_str({'A': 1, 'B': 2, 'L': 0}) returns
-        "AB2"
+    classify_geometry():
+        Classifies the geometry of a given compound, given
+        `element_dict` (see get_elements()) and number of
+        lone pairs `lp` (see get_lp()).
     """
 
-    # This stores the final geometry string
+    # There will be at least 2 atoms and no lone pairs by default
+    geometry_dict = {'A': 1, 'B': 1, 'L': 0}
+
+    for el in element_dict:
+        if element_dict[el] > 1:
+            geometry_dict['B'] = element_dict[el]
+            break
+
+    geometry_dict['L'] = int(lp)
+
+    # Final classification
     geometry_str = ""
 
     for el in geometry_dict:
@@ -617,27 +625,6 @@ def gdict_to_str(geometry_dict: dict) -> str:
             geometry_str += el
 
     return geometry_str
-
-
-def classify_geometry(element_dict: dict, lp: float):
-    """
-    classify_geometry():
-        Classifies the geometry of a given compound, given
-        `element_dict` (see get_elements()) and number of
-        lone pairs `lp` (see get_lp()).
-    """
-
-    # This dictionary holds the final classification.
-    geometry = {'A': 1, 'B': 1, 'L': 0}
-
-    for el in element_dict:
-        if element_dict[el] > 1:
-            geometry['B'] = element_dict[el]
-            break
-
-    geometry['L'] = int(lp)
-
-    return gdict_to_str(geometry)
 
 
 def fetch_coordinates(geometry: str) -> tuple:
