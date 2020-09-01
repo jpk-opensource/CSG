@@ -1,4 +1,4 @@
-# CSG
+# CSG: Chemical Structure Generator
 ![CSG Demo](img/csg_demo.gif)
 <br/>
 <br/>
