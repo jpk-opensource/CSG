@@ -84,7 +84,8 @@ def main() -> None:
             continue
 
         cmd_type = "builtin" if chem_form[0] == '/' else "formula"
-        cur.execute("INSERT INTO history VALUES(NULL, ?, ?);", (chem_form, cmd_type))
+        cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                    (chem_form, cmd_type))
         conn.commit()
 
         if chem_form.strip()[0] == '/':
@@ -361,7 +362,8 @@ def history(args: list) -> None:
 
         print("{:>6}  {:<30}  {:<12}".format("No.", "Command", "Type"))
         for record in cur.fetchall():
-            aligned = "{:>6}  {:<30}  {:<12}".format(str(record[0]), record[1], record[2])
+            aligned = "{:>6}  {:<30}  {:<12}".format(str(record[0]), record[1],
+                                                     record[2])
             print(aligned)
 
     conn.close()
@@ -376,29 +378,29 @@ def csg_help(args: list) -> None:
 
     for arg in args:
         if arg == "/help":
-            print("Usage: /help [name]\n" +
-                  "       Display command help, or (optionally) show usage info for\n" +
+            print("Usage: /help [name]\n"
+                  "       Display command help, or (optionally) show usage info for\n"
                   "       a specific builtin command.\n")
 
-            print("Examples\n" +
-                  "\t/help\n" +
+            print("Examples\n"
+                  "\t/help\n"
                   "\t/help /history")
 
         elif arg in ("/hist", "/history"):
-            print("Usage: /history [subcommand]\n" +
+            print("Usage: /history [subcommand]\n"
                   "       Show command history. If 'sub-command' is specified, execute it.\n")
 
-            print("Subcommands:\n" +
-                  "       clear                 : Clear history\n" +
+            print("Subcommands:\n"
+                  "       clear                 : Clear history\n"
                   "       select [command type] : Display history of specified command type only\n")
 
-            print("Examples\n" +
-                  "\t/history\n" +
-                  "\t/history clear\n" +
+            print("Examples\n"
+                  "\t/history\n"
+                  "\t/history clear\n"
                   "\t/history select builtin")
 
         elif arg in ("/exit", "/quit"):
-            print("Usage: /exit\n" +
+            print("Usage: /exit\n"
                   "       Exit CSG.")
 
         else:
@@ -506,7 +508,7 @@ def validate(chem_form: str) -> bool:
     net_charge_zero = False
 
     # Populating a list of input elements if they exist
-    # No validation of transition elements, as they do not exist in oxidn_states
+    # No validation of transition elements
     for el in element_dict:
         if not pt.check(el):
             return False
@@ -516,10 +518,12 @@ def validate(chem_form: str) -> bool:
     # Creating lists of total charge on individual elements in order to
     # be able to equate their sum to zero.
     for variable_oxidn_state in oxidn_states[element_list[0]]:
-        first_element_charges.append(element_dict[element_list[0]] * variable_oxidn_state)
+        first_element_charges.append(element_dict[element_list[0]]
+                                     * variable_oxidn_state)
 
     for variable_oxidn_state in oxidn_states[element_list[1]]:
-        second_element_charges.append(element_dict[element_list[1]] * variable_oxidn_state)
+        second_element_charges.append(element_dict[element_list[1]]
+                                      * variable_oxidn_state)
 
     # Summation to find the net charge. Validity of input auto-falsifies
     # if it fails to show zero net charge.
@@ -687,8 +691,11 @@ def render(chem_form: str) -> None:
     fig = plt.figure(f'{chem_form} ({geometry} type)')
     ax = fig.add_subplot(111, projection='3d')
     ax.set_axis_off()
-    ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca), markersize=pt.get_markersize(nca))
-    ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca), markersize=pt.get_markersize(ca))
+
+    ax.plot(x, y, z, 'o', c=pt.get_markercolor(nca),
+            markersize=pt.get_markersize(nca))
+    ax.plot(0, 0, 0, 'o', c=pt.get_markercolor(ca),
+            markersize=pt.get_markersize(ca))
 
     conn = sqlite3.connect('.db/csg_db.db')
     cur = conn.cursor()
@@ -714,11 +721,17 @@ def render(chem_form: str) -> None:
         bond_order = 8 - pt.get_nvalence_electrons(nca)
 
     if bond_order == 1:
-        bond_params = {'dark': 'royalblue', 'light': 'g', 'lw': 1, 'bo': 'single'}
+        bond_params = {
+            'dark': 'royalblue', 'light': 'g', 'lw': 1, 'bo': 'single'
+        }
     elif bond_order == 2:
-        bond_params = {'dark': 'g', 'light': 'navy', 'lw': 2.5, 'bo': 'double'}
+        bond_params = {
+            'dark': 'g', 'light': 'navy', 'lw': 2.5, 'bo': 'double'
+        }
     else:
-        bond_params = {'dark': 'b', 'light': 'red', 'lw': 3.5, 'bo': 'triple'}
+        bond_params = {
+            'dark': 'b', 'light': 'red', 'lw': 3.5, 'bo': 'triple'
+        }
 
     # Plotting Bonds
     for i in range(len(x)):

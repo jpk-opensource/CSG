@@ -22,14 +22,31 @@
 class PeriodicTable:
     def __init__(self):
         self.__groups = {
-            1:  {'H':  1, 'Li': 3,  'Na': 11, 'K':  19, 'Rb': 37, 'Cs': 55, 'Fr': 87},
-            2:  {'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88},
-            13: {'B':  5, 'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81},
-            14: {'C':  6, 'Si': 14, 'Ge': 32, 'Sn': 50, 'Pb': 82},
-            15: {'N':  7, 'P':  15, 'As': 33, 'Sb': 51, 'Bi': 83},
-            16: {'O':  8, 'S':  16, 'Se': 34, 'Te': 52, 'Po': 84},
-            17: {'F':  9, 'Cl': 17, 'Br': 35, 'I':  53, 'At': 85},
-            18: {'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86}
+            1:  {
+                'H':  1,  'Li': 3,  'Na': 11, 'K': 19,
+                'Rb': 37, 'Cs': 55, 'Fr': 87
+            },
+            2:  {
+                'Be': 4, 'Mg': 12, 'Ca': 20, 'Sr': 38, 'Ba': 56, 'Ra': 88
+            },
+            13: {
+                'B':  5, 'Al': 13, 'Ga': 31, 'In': 49, 'Ti': 81
+            },
+            14: {
+                'C':  6, 'Si': 14, 'Ge': 32, 'Sn': 50, 'Pb': 82
+            },
+            15: {
+                'N':  7, 'P':  15, 'As': 33, 'Sb': 51, 'Bi': 83
+            },
+            16: {
+                'O':  8, 'S':  16, 'Se': 34, 'Te': 52, 'Po': 84
+            },
+            17: {
+                'F':  9, 'Cl': 17, 'Br': 35, 'I':  53, 'At': 85
+            },
+            18: {
+                'He': 2, 'Ne': 10, 'Ar': 18, 'Kr': 36, 'Xe': 54, 'Rn': 86
+            }
         }
 
         self.__group_valencies = {
@@ -137,7 +154,8 @@ class Stats:
         pt = PeriodicTable()
 
         self.c_atom_dict = ca_dict
-        self.c_atom, self.c_atom_sub = list(ca_dict.keys())[0], list(ca_dict.values())[0]
+        self.c_atom = list(ca_dict.keys())[0]
+        self.c_atom_sub = list(ca_dict.values())[0]
         self.c_atom_val = 0
         self.c_atom_nval_e = 0
         for c_atom in ca_dict:
@@ -146,7 +164,8 @@ class Stats:
             break
 
         self.nc_atom_dict = nca_dict
-        self.nc_atom, self.nc_atom_sub = list(nca_dict.keys())[0], list(nca_dict.values())[0]
+        self.nc_atom = list(nca_dict.keys())[0]
+        self.nc_atom_sub = list(nca_dict.values())[0]
         self.nc_atom_val = 0
         self.nc_atom_nval_e = 0
         for nc_atom in nca_dict:
