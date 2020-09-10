@@ -114,6 +114,7 @@ class Home(QWidget):
         self.formula_field.returnPressed.connect(self.go_btn_clicked)
 
         self.recents_list = QListWidget()
+        self.recents_list.itemClicked.connect(self.recent_clicked)
 
         init_csg_db()
         conn = sqlite3.connect(".db/csg_db.db")
@@ -160,26 +161,32 @@ class Home(QWidget):
             """)
             self.go_btn.setDisabled(True)
 
+    def do_render(self, chem_form):
+        conn = sqlite3.connect(".db/csg_db.db")
+        cur = conn.cursor()
+        cur.execute("SELECT command FROM history WHERE type='formula';")
+        all_rec = cur.fetchall()
+        all_chem_forms = []
+        for rec in all_rec:
+            all_chem_forms.append(rec[0])
+
+        if len(all_chem_forms) == 0 or chem_form not in all_chem_forms:
+            cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                        (chem_form, "formula"))
+            conn.commit()
+            self.recents_list.insertItem(0, chem_form)
+
+        render(chem_form)
+        conn.close()
+
     def go_btn_clicked(self):
         chem_form = self.formula_field.text()
         is_valid = validate(chem_form)
         if is_valid:
-            conn = sqlite3.connect(".db/csg_db.db")
-            cur = conn.cursor()
-            cur.execute("SELECT command FROM history WHERE type='formula';")
-            all_rec = cur.fetchall()
-            all_chem_forms = []
-            for rec in all_rec:
-                all_chem_forms.append(rec[0])
+            self.do_render(chem_form)
 
-            if len(all_chem_forms) == 0 or chem_form not in all_chem_forms:
-                cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
-                            (chem_form, "formula"))
-                conn.commit()
-                self.recents_list.insertItem(0, chem_form)
-
-            render(chem_form)
-            conn.close()
+    def recent_clicked(self, item):
+        self.do_render(item.text())
 
 
 class PreferencesPage(QWidget):
