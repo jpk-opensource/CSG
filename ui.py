@@ -121,9 +121,14 @@ class Home(QWidget):
         cur.execute("SELECT command FROM history WHERE type='formula';")
 
         i = 0
-        for rec in cur.fetchall():
-            self.recents_list.insertItem(i, rec[0])
-            i += 1
+        all_recs = cur.fetchall()
+        items = []
+        for rec in all_recs:
+            items.append(rec[0])
+
+        items = items[::-1]
+
+        self.recents_list.addItems(items)
         conn.close()
 
         self.main_layout.addWidget(self.recents_label)
@@ -159,7 +164,22 @@ class Home(QWidget):
         chem_form = self.formula_field.text()
         is_valid = validate(chem_form)
         if is_valid:
+            conn = sqlite3.connect(".db/csg_db.db")
+            cur = conn.cursor()
+            cur.execute("SELECT command FROM history WHERE type='formula';")
+            all_rec = cur.fetchall()
+            all_chem_forms = []
+            for rec in all_rec:
+                all_chem_forms.append(rec[0])
+
+            if len(all_chem_forms) == 0 or chem_form not in all_chem_forms:
+                cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                            (chem_form, "formula"))
+                conn.commit()
+                self.recents_list.insertItem(0, chem_form)
+
             render(chem_form)
+            conn.close()
 
 
 class PreferencesPage(QWidget):

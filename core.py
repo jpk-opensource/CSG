@@ -84,12 +84,12 @@ def main() -> None:
             continue
 
         cmd_type = "builtin" if chem_form[0] == '/' else "formula"
-        cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
-                    (chem_form, cmd_type))
-        conn.commit()
 
         if chem_form.strip()[0] == '/':
             run_builtin_cmd(chem_form.split())
+            cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                        (chem_form, cmd_type))
+            conn.commit()
             continue
 
         valid = validate(chem_form)
@@ -103,6 +103,7 @@ def main() -> None:
             print("{:<10} : {:<6}".format("Geometry", geometry))
 
             render(chem_form)
+
 
         else:
             print("Enter a valid compound with exactly 2 elements.")
@@ -763,6 +764,31 @@ def render(chem_form: str) -> None:
                bbox_to_anchor=(1.12, 0.987))
 
     plt.show()
+
+    conn = sqlite3.connect(".db/csg_db.db")
+    cur = conn.cursor()
+    cur.execute("SELECT command FROM history WHERE type='formula';")
+    all_recs = cur.fetchall()
+
+    if len(all_recs) == 0:
+        print("NEW")
+        cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                    (chem_form, "formula"))
+        conn.commit()
+
+    else:
+        chem_forms = []
+        for rec in all_recs:
+            chem_forms.append(rec[0])
+
+
+        if chem_form not in chem_forms:
+            print("NEW")
+            cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                        (chem_form, "formula"))
+            conn.commit()
+
+    conn.close()
 
 
 if __name__ == "__main__":
