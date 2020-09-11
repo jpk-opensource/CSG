@@ -754,7 +754,7 @@ def render(chem_form: str) -> None:
                markersize=15)
     ]
 
-    element_legend = plt.legend(handles=element_handles, title='Legend', loc=1,
+    element_legend = plt.legend(handles=element_handles, loc=1,
                                 bbox_to_anchor=(1.3, 1.15))
 
     # Adding `legend` artist to facilitate multiple legends on the same axes
