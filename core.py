@@ -27,6 +27,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
+VERSION = "v0.1-alpha.3"
 
 oxidn_states = {
     'H':  [-1, 1],
@@ -58,7 +59,7 @@ tick = '\u2713'
 
 
 def main() -> None:
-    print("CSG: Chemical Structure Generator v0.1")
+    print(f"CSG: Chemical Structure Generator {VERSION}")
     print("Type '/help' for help on command usage.\n")
 
     init_csg_db()

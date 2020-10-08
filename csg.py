@@ -21,12 +21,12 @@
 
 from sys import argv
 
-VERSION = "v0.1-alpha"
+from core import VERSION, main
+from ui import ui_main
 
 
 def start_csg():
     if "--cli" in argv:
-        from core import main
         main()
 
     elif "--help" in argv or "-h" in argv:
@@ -38,7 +38,6 @@ def start_csg():
         exit()
 
     try:
-        from ui import ui_main
 
         if len(argv) > 1:
             print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))

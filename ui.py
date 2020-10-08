@@ -36,6 +36,7 @@ STYLESHEET = ""
 class StackHolder(QWidget):
     def __init__(self):
         super().__init__()
+        self.setFixedSize(600, 300)
         self.setWindowTitle(DEFAULT_TITLE)
         self.setStyleSheet(STYLESHEET)
 
@@ -116,6 +117,11 @@ class Home(QWidget):
         self.recents_list = QListWidget()
         self.recents_list.itemClicked.connect(self.recent_clicked)
 
+        self.clear_recents_btn = QPushButton("Clear")
+        self.clear_recents_btn.setFixedHeight(30)
+        self.clear_recents_btn.clicked.connect(self.clear_recents_btn_clicked)
+        self.clear_recents_btn.setCursor(Qt.PointingHandCursor)
+
         init_csg_db()
         conn = sqlite3.connect(".db/csg_db.db")
         cur = conn.cursor()
@@ -134,6 +140,7 @@ class Home(QWidget):
 
         self.main_layout.addWidget(self.recents_label)
         self.main_layout.addWidget(self.recents_list)
+        self.main_layout.addWidget(self.clear_recents_btn)
 
         self.form_layout.addRow(self.csg_label)
         self.form_layout.addRow(self.chem_form_label, self.formula_field)
@@ -184,6 +191,15 @@ class Home(QWidget):
         is_valid = validate(chem_form)
         if is_valid:
             self.do_render(chem_form)
+
+    def clear_recents_btn_clicked(self):
+        self.recents_list.clear()
+
+        conn = sqlite3.connect(".db/csg_db.db")
+        cur = conn.cursor()
+        cur.execute("DELETE FROM history WHERE type='formula';")
+        conn.commit()
+        conn.close()
 
     def recent_clicked(self, item):
         self.do_render(item.text())
