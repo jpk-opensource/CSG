@@ -197,7 +197,8 @@ class Home(QWidget):
 
         conn = sqlite3.connect(".db/csg_db.db")
         cur = conn.cursor()
-        cur.execute("DELETE FROM history WHERE type='formula';")
+        cur.execute("DELETE FROM history;")
+        cur.execute("DELETE FROM sqlite_sequence WHERE name='history';")
         conn.commit()
         conn.close()
 

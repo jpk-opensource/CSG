@@ -772,7 +772,6 @@ def render(chem_form: str) -> None:
     all_recs = cur.fetchall()
 
     if len(all_recs) == 0:
-        print("NEW")
         cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
                     (chem_form, "formula"))
         conn.commit()
@@ -784,7 +783,6 @@ def render(chem_form: str) -> None:
 
 
         if chem_form not in chem_forms:
-            print("NEW")
             cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
                         (chem_form, "formula"))
             conn.commit()
