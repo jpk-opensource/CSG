@@ -1,7 +1,7 @@
 # core.py: Core CSG functions
 
 #
-#   Copyright (C) 2020 Jithin Renji, Kannan MD, Pranav Pujar
+#   Copyright (C) 2020-2021 Jithin Renji, Kannan MD, Pranav Pujar
 #
 #   This file is part of CSG.
 #
