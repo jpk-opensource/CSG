@@ -20,7 +20,7 @@ Options:
     --version -V    Show version information and exit
 ```
 ## License
-Copyright © 2020 Jithin Renji, Kannan MD, Pranav Pujar
+Copyright © 2020-2021 Jithin Renji, Kannan MD, Pranav Pujar
 
 CSG is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
