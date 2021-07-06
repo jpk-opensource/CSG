@@ -9,6 +9,12 @@ A simple Chemical Structure Generator.
 - PyQt5 (optional; >= v5.15.0 required for graphical front-end)
 - Matplotlib (>= v3.3.1)
 
+## Install Dependencies
+Change to the source directory and type the following command:
+```
+pip install -r requirements.txt
+```
+
 ## Usage
 ```
 Usage: csg.py [OPTION]
