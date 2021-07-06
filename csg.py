@@ -21,13 +21,19 @@
 
 from sys import argv
 
-from core import VERSION, main
-from ui import ui_main
+import sqlite3
+
+from core import (init_csg_db, validate, run_builtin_cmd, get_elements, get_lp,
+                 classify_geometry, render)
+from ui import ui_init
 
 
-def start_csg():
+VERSION = "v0.1-alpha.3"
+
+
+def main():
     if "--cli" in argv:
-        main()
+        repl()
 
     elif "--help" in argv or "-h" in argv:
         usage()
@@ -38,11 +44,10 @@ def start_csg():
         exit()
 
     try:
-
         if len(argv) > 1:
             print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
 
-        ui_main()
+        ui_init()
 
     except ModuleNotFoundError:
         print("[!] PyQt5 needs to be installed to run the graphical front-end.")
@@ -50,6 +55,57 @@ def start_csg():
     or install PyQt5 by running 'pip install pyqt5'""")
 
         exit()
+
+
+def repl() -> None:
+    print(f"CSG: Chemical Structure Generator {VERSION}")
+    print("Type '/help' for help on command usage.\n")
+
+    init_csg_db()
+    conn = sqlite3.connect(".db/csg_db.db")
+    cur = conn.cursor()
+
+    while True:
+        try:
+            chem_form = input(">> ")
+
+        # Exit on Ctrl-D
+        except EOFError:
+            print("Exiting...")
+            conn.close()
+            exit()
+
+        # Ignore Ctrl-C
+        except KeyboardInterrupt:
+            print()
+            continue
+
+        if chem_form == '':
+            continue
+
+        cmd_type = "builtin" if chem_form[0] == '/' else "formula"
+
+        if chem_form.strip()[0] == '/':
+            run_builtin_cmd(chem_form.split())
+            cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
+                        (chem_form, cmd_type))
+            conn.commit()
+            continue
+
+        valid = validate(chem_form)
+
+        if valid:
+            element_dict = get_elements(chem_form)
+            lp = get_lp(element_dict)
+            geometry = classify_geometry(element_dict, lp)
+
+            print("{:<10} : {:<6}".format("Lone Pairs", lp))
+            print("{:<10} : {:<6}".format("Geometry", geometry))
+
+            render(chem_form)
+
+        else:
+            print("Enter a valid compound with exactly 2 elements.")
 
 
 def usage():
@@ -75,4 +131,4 @@ Written by Jithin Renji, Kannan MD, and Pranav Pujar.\
 
 
 if __name__ == "__main__":
-    start_csg()
+    main()

@@ -27,7 +27,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-VERSION = "v0.1-alpha.3"
 
 oxidn_states = {
     'H':  [-1, 1],
@@ -56,60 +55,6 @@ oxidn_states = {
 }
 
 tick = '\u2713'
-
-
-def main() -> None:
-    print(f"CSG: Chemical Structure Generator {VERSION}")
-    print("Type '/help' for help on command usage.\n")
-
-    init_csg_db()
-    conn = sqlite3.connect(".db/csg_db.db")
-    cur = conn.cursor()
-
-    while True:
-        try:
-            chem_form = input(">> ")
-
-        # Exit on Ctrl-D
-        except EOFError:
-            print("Exiting...")
-            conn.close()
-            exit()
-
-        # Ignore Ctrl-C
-        except KeyboardInterrupt:
-            print()
-            continue
-
-        if chem_form == '':
-            continue
-
-        cmd_type = "builtin" if chem_form[0] == '/' else "formula"
-
-        if chem_form.strip()[0] == '/':
-            run_builtin_cmd(chem_form.split())
-            cur.execute("INSERT INTO history VALUES(NULL, ?, ?);",
-                        (chem_form, cmd_type))
-            conn.commit()
-            continue
-
-        valid = validate(chem_form)
-
-        if valid:
-            element_dict = get_elements(chem_form)
-            lp = get_lp(element_dict)
-            geometry = classify_geometry(element_dict, lp)
-
-            print("{:<10} : {:<6}".format("Lone Pairs", lp))
-            print("{:<10} : {:<6}".format("Geometry", geometry))
-
-            render(chem_form)
-
-
-        else:
-            print("Enter a valid compound with exactly 2 elements.")
-
-    conn.close()
 
 
 def init_csg_db() -> None:
@@ -788,7 +733,3 @@ def render(chem_form: str) -> None:
             conn.commit()
 
     conn.close()
-
-
-if __name__ == "__main__":
-    main()

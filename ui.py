@@ -260,7 +260,7 @@ class PreferencesPage(QWidget):
         self.stackh.setStyleSheet(STYLESHEET)
 
 
-def ui_main():
+def ui_init():
     global STYLESHEET
     global LIGHT_STYLESHEET
     global DARK_STYLESHEET
@@ -313,4 +313,4 @@ def ui_main():
 
 
 if __name__ == "__main__":
-    ui_main()
+    ui_init()
