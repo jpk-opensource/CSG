@@ -1,6 +1,8 @@
-venv
-.venv
-.vscode
-.db
-.idea
-__pycache__
+*.swp
+
+venv/
+.venv/
+.vscode/
+.db/
+.idea/
+__pycache__/

@@ -20,6 +20,10 @@
 #
 
 class PeriodicTable:
+    """
+    Contains elements elements which can form compounds according to the
+    VSEPR theory.
+    """
     def __init__(self):
         self.__groups = {
             1:  {
@@ -116,17 +120,38 @@ class PeriodicTable:
         ]
 
     def check(self, element):
+        """
+        Check if an element is present in the periodic table (as defined
+        above).
+
+        Args:
+            element: the element which should be checked
+        """
         for i in self.__groups:
             if element in self.__groups[i]:
                 return True
+
         return False
 
     def get_valency(self, element):
+        """
+        Get an element's valency.
+
+        Args:
+            element: the element whose valency should be returned
+        """
         for n_grp in self.__groups:
             if element in self.__groups[n_grp]:
                 return self.__group_valencies[n_grp]
 
     def get_nvalence_electrons(self, element):
+        """
+        Get number of valence electrons in an element.
+
+        Args:
+            element: the element whose number of valence electrons should be
+                     returned.
+        """
         if element == 'He':
             return 2
 
@@ -135,22 +160,51 @@ class PeriodicTable:
                 return self.__group_valence_electrons[n_grp]
 
     def get_group_elements(self, num):
+        """
+        Get elements in a given group number.
+
+        Args:
+            num: group number
+        """
         return list(self.__groups[num].keys())
 
     def get_markersize(self, element):
+        """
+        Get an element's marker size for rendering purposes.
+
+        Args:
+            element: the element whose marker size should be returned
+        """
         return self.__atomic_numbers[element] + 4
 
     def get_markercolor(self, element):
+        """
+        Get an element's marker color for rendering purposes.
+
+        Args:
+            element: the element whose marker color should be returned.
+        """
         atomic_number = self.__atomic_numbers[element]
         temp = list(self.__atomic_colors[atomic_number - 1])
         color_list = []
         for rgb in temp:
             color_list.append(rgb / 255)
+
         return color_list
 
 
 class Stats:
     def __init__(self, ca_dict, nca_dict):
+        """
+        Constructor.
+
+        Args:
+            ca_dict: dictionary of the form {"central atom": subscript}.
+                     Rationale: allows for expansion to compounds with more
+                                than one central atom.
+
+            nca_dict: dictionary of the form {"non central atom": subscript}
+        """
         pt = PeriodicTable()
 
         self.c_atom_dict = ca_dict
@@ -176,6 +230,7 @@ class Stats:
 
     # This exists for debugging purposes
     def print_stats(self):
+        """Print compound stats."""
         print("=== CENTRAL ATOM ===")
         print("\tAtom:\t\t\t\t", self.c_atom)
         print("\tValency:\t\t\t", self.c_atom_val)

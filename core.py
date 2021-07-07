@@ -58,11 +58,7 @@ tick = '\u2713'
 
 
 def init_csg_db() -> None:
-    """
-    init_csg_db():
-        Initialize the CSG database, if it does not exist. At the moment,
-        all it does is to create the history table if it doesn't exist.
-    """
+    """Initialize the CSG database, if it does not exist."""
     if not path.isdir(".db"):
         print("[!] Creating database directory...")
         mkdir(".db")
@@ -93,6 +89,7 @@ def init_csg_db() -> None:
 
 
 def init_geometry_db() -> None:
+    """Initialize the geometry database."""
     conn = sqlite3.connect('.db/geometry.db')
     cur = conn.cursor()
 
@@ -253,9 +250,10 @@ def init_geometry_db() -> None:
 
 def run_builtin_cmd(cmd_argv: list) -> None:
     """
-    run_builtin_cmd():
-        Pretty self-explanatory. Runs builtin commands, if it is recognized.
-        Builtin commands start with '/'.
+    Run a builtin command. Builtin commands start with '/'.
+
+    Args:
+        cmd_argv: list containing each argument of the command
     """
     args = cmd_argv[1:]
     if cmd_argv[0] in ("/hist", "/history"):
@@ -274,6 +272,12 @@ def run_builtin_cmd(cmd_argv: list) -> None:
 
 
 def history(args: list) -> None:
+    """
+    The /history command.
+
+    Args:
+        args: list containing arguments
+    """
     conn = sqlite3.connect(".db/csg_db.db")
     cur = conn.cursor()
 
@@ -317,6 +321,12 @@ def history(args: list) -> None:
 
 
 def csg_help(args: list) -> None:
+    """
+    The /help command.
+
+    Args:
+        args: list containing arguments
+    """
     if len(args) == 0:
         print("Valid commands:")
         print("\t{:<20}{:<20}".format("/history, /hist", "Print command history"))
@@ -358,9 +368,11 @@ def csg_help(args: list) -> None:
 
 def get_elements(chem_form: str) -> dict:
     """
-    get_elements():
-        Returns a dictionary of elements, with the corresponding number
-        of the same element present in the formula.
+    Returns a dictionary of elements, with the corresponding number
+    of the same element present in the formula.
+
+    Args:
+        chem_form: chemical formula
 
     Example:
         get_elements("H2O") returns {"H": 2, "O": 1}
@@ -441,10 +453,10 @@ def validate(chem_form: str) -> bool:
             lotta additions)
         (c) Their net charge is zero (this condition checking is
             achieved by taking into account the oxidn states of each
-           element)
+            element)
 
-    :parameter chem_form is a string
-    :returns boolean
+    Args:
+        chem_form: chemical formula
     """
 
     element_dict = get_elements(chem_form)
@@ -485,6 +497,12 @@ def validate(chem_form: str) -> bool:
 
 
 def get_compound_stats(element_dict: dict) -> Stats:
+    """
+    Return compound stats as a Stats object.
+
+    Args:
+        element_dict: dict returned by get_elements()
+    """
     elements = list(element_dict.keys())
     subscripts = list(element_dict.values())
 
@@ -527,8 +545,10 @@ def get_compound_stats(element_dict: dict) -> Stats:
 
 def get_lp(element_dict: dict) -> float:
     """
-    get_lp():
-        Return the number of lone pairs in a given compound.
+    Return the number of lone pairs in a given compound.
+
+    Args:
+        element_dict: dict returned by get_elements()
     """
 
     stats = get_compound_stats(element_dict)
@@ -548,10 +568,11 @@ def get_lp(element_dict: dict) -> float:
 
 def classify_geometry(element_dict: dict, lp: float) -> str:
     """
-    classify_geometry():
-        Classifies the geometry of a given compound, given
-        `element_dict` (see get_elements()) and number of
-        lone pairs `lp` (see get_lp()).
+    Classifies the geometry of a given compound.
+
+    Args:
+        element_dict: dict returned by get_elements()
+        lp: number of lone pairs
     """
 
     # There will be at least 2 atoms and no lone pairs by default
@@ -582,8 +603,10 @@ def classify_geometry(element_dict: dict, lp: float) -> str:
 
 def fetch_coordinates(geometry: str) -> tuple:
     """
-        Initializing the geometry database if does not exist.
-        To be used for fetching coordinates and rendering.
+    Fetch coordinates for a given geometry.
+
+    Args:
+        geometry: geometry returned by classify_geometry()
     """
     x, y, z = [], [], []
 
@@ -609,10 +632,10 @@ def fetch_coordinates(geometry: str) -> tuple:
 
 def render(chem_form: str) -> None:
     """
-        Fetches the information from the `geometry` database using the
-        input_geometry parameter. Renders the input compound in 3-dimensional
-        space using matplotlib, taking into account the user preferred theme
-        and bond order.
+    Render the 3D structure of a given compound.
+
+    Args:
+        chem_form: chemical formula
     """
     element_dict = get_elements(chem_form)
     geometry = classify_geometry(element_dict, get_lp(element_dict))
