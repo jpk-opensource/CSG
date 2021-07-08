@@ -25,20 +25,9 @@ purpose.
 
 * Commas should have at least one space following them.
 
-* Wherever possible, comments should precede the line/lines that
-it is explaining, ie.
-
-  ```python
-  some_var = 5  # Avoid this type of comment wherever possible
-
-  # This is preferrable
-  some_other_var = 6
-  ```
-
 * Please try to adhere to the 79-character line length limit.
 This makes it easier to have multiple terminals/text-editors open,
-without unnecessary line-wrapping. This is the rationale for the
-comment style as well.
+without unnecessary line-wrapping.
 
 * Important variables should be named properly. Use snake case,
 ie. underscores as word separators. Do not use camelCase/PascalCase.
