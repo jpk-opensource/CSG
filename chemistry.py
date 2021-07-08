@@ -119,7 +119,7 @@ class PeriodicTable:
             (112, 212, 255)
         ]
 
-    def check(self, element):
+    def check(self, element: str) -> bool:
         """
         Check if an element is present in the periodic table (as defined
         above).
@@ -133,7 +133,7 @@ class PeriodicTable:
 
         return False
 
-    def get_valency(self, element):
+    def get_valency(self, element: str) -> int:
         """
         Get an element's valency.
 
@@ -144,7 +144,7 @@ class PeriodicTable:
             if element in self.__groups[n_grp]:
                 return self.__group_valencies[n_grp]
 
-    def get_nvalence_electrons(self, element):
+    def get_nvalence_electrons(self, element: str) -> int:
         """
         Get number of valence electrons in an element.
 
@@ -159,7 +159,7 @@ class PeriodicTable:
             if element in self.__groups[n_grp]:
                 return self.__group_valence_electrons[n_grp]
 
-    def get_group_elements(self, num):
+    def get_group_elements(self, num: int) -> list:
         """
         Get elements in a given group number.
 
@@ -168,7 +168,7 @@ class PeriodicTable:
         """
         return list(self.__groups[num].keys())
 
-    def get_markersize(self, element):
+    def get_markersize(self, element: str) -> int:
         """
         Get an element's marker size for rendering purposes.
 
@@ -177,7 +177,7 @@ class PeriodicTable:
         """
         return self.__atomic_numbers[element] + 4
 
-    def get_markercolor(self, element):
+    def get_markercolor(self, element: str) -> list:
         """
         Get an element's marker color for rendering purposes.
 
@@ -194,7 +194,7 @@ class PeriodicTable:
 
 
 class Stats:
-    def __init__(self, ca_dict, nca_dict):
+    def __init__(self, ca_dict: dict, nca_dict: dict):
         """
         Constructor.
 
@@ -229,7 +229,7 @@ class Stats:
             break
 
     # This exists for debugging purposes
-    def print_stats(self):
+    def print_stats(self) -> None:
         """Print compound stats."""
         print("=== CENTRAL ATOM ===")
         print("\tAtom:\t\t\t\t", self.c_atom)
