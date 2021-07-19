@@ -1,21 +1,54 @@
 # CSG: Chemical Structure Generator
+
 ![CSG Demo](img/csg_demo.gif)
 <br/>
 <br/>
 A simple Chemical Structure Generator.
 
 ## Requirements
+
 - Python 3 (>= v3.8)
 - PyQt5 (optional; >= v5.15.0 required for graphical front-end)
 - Matplotlib (>= v3.3.1)
 
 ## Install Dependencies
+
 Change to the source directory and type the following command:
+
 ```
 pip install -r requirements.txt
 ```
 
+## macOS Big Sur on Apple M1 chip
+
+The required version of PyQt5 cannot be installed using pip on M1 MacBooks
+(tested on the MacBook Air) as of the time of writing. A workaround for this is
+as follows:
+
+- Install [Homebrew](https://brew.sh).
+- Run the following commands for PyQt5 v5.15.4 running on Python 3.9 (replace
+  versions in the command appropriately):
+
+  ```
+  brew install pyqt5
+  mv /opt/homebrew/Cellar/pyqt@5/5.15.4_2/lib/python3.9/site-packages/* /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/
+  ```
+- Install matplotlib using pip:
+
+  ```
+  pip3 install matplotlib
+  ```
+- Run CSG:
+
+  ```
+  ./csg.py
+  ```
+
+
+- It *should* work. If not, please open an [issue](https://github.com/jpk-opensource/CSG/issues/new).
+
 ## Usage
+
 ```
 Usage: csg.py [OPTION]
     Generate simple chemical structures.
@@ -25,7 +58,9 @@ Options:
     --help,   -h    Show this help message and exit
     --version -V    Show version information and exit
 ```
+
 ## License
+
 Copyright © 2020-2021 Jithin Renji, Kannan MD, Pranav Pujar
 
 CSG is free software: you can redistribute it and/or modify
