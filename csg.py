@@ -25,7 +25,6 @@ import sqlite3
 
 from core import (init_csg_db, validate, run_builtin_cmd, get_elements, get_lp,
                  classify_geometry, render)
-from ui import ui_init
 
 
 VERSION = "v0.1-alpha.3"
@@ -44,6 +43,7 @@ def main():
         exit()
 
     try:
+        from ui import ui_init
         if len(argv) > 1:
             print("[!] Ignoring extra argument(s): ", ", ".join(argv[1:]))
 
