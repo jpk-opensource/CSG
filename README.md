@@ -19,7 +19,7 @@ Change to the source directory and type the following command:
 pip install -r requirements.txt
 ```
 
-### Workaround for macOS Big Sur on Apple M1 chip
+### Workaround for macOS Big Sur on the Apple M1 chip
 
 The required version of PyQt5 cannot be installed using pip on M1 MacBooks
 (tested on the MacBook Air) as of the time of writing. A workaround for this is
