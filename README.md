@@ -44,9 +44,6 @@ as follows:
   ./csg.py
   ```
 
-
-- It *should* work. If not, please open an [issue](https://github.com/jpk-opensource/CSG/issues/new).
-
 ## Usage
 
 ```
