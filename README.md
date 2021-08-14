@@ -25,7 +25,7 @@ The required version of PyQt5 cannot be installed using pip on M1 MacBooks
 (tested on the MacBook Air) as of the time of writing. A workaround for this is
 as follows:
 
-- Install [Homebrew](https://brew.sh).
+- Make sure you have installed [Homebrew](https://brew.sh).
 - Run the following commands for PyQt5 v5.15.4 running on Python 3.9 (replace
   versions in the command appropriately):
 
