@@ -52,7 +52,7 @@ class StackHolder(QWidget):
         pref_action = emenu_actions.addAction("Preferences")
         pref_action.triggered.connect(self.set_preferences)
 
-        self.back_btn = QPushButton("< Back")
+        self.back_btn = QPushButton("Back")
         self.back_btn.setFixedSize(70, 30)
         self.back_btn.setCursor(Qt.PointingHandCursor)
         self.back_btn.clicked.connect(self.go_back)
